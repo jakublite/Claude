@@ -26,27 +26,33 @@ import de.jakub.seminarverwaltung.benutzer.Benutzer;
 import de.jakub.seminarverwaltung.benutzer.BenutzerRepository;
 import de.jakub.seminarverwaltung.seminar.Seminar;
 import de.jakub.seminarverwaltung.seminar.SeminarRepository;
+import de.jakub.seminarverwaltung.sicherheit.Angemeldet;
 import de.jakub.seminarverwaltung.zertifikat.Niveau;
 import de.jakub.seminarverwaltung.zertifikat.Zertifikat;
 import de.jakub.seminarverwaltung.zertifikat.ZertifikatRepository;
 import de.jakub.seminarverwaltung.zertifikat.ZertifikatService;
+import jakarta.annotation.security.PermitAll;
 
+/** Teilnehmer sehen nur die eigenen Zertifikate und ändern nichts. */
 @Route("zertifikate")
 @PageTitle("Zertifikate")
+@PermitAll
 public class ZertifikateView extends VerticalLayout {
 
     private final ZertifikatRepository zertifikatRepository;
     private final ZertifikatService zertifikatService;
     private final SeminarRepository seminarRepository;
     private final BenutzerRepository benutzerRepository;
+    private final Angemeldet angemeldet;
     private final Grid<Zertifikat> grid = new Grid<>();
 
     public ZertifikateView(ZertifikatRepository zertifikatRepository, ZertifikatService zertifikatService,
-            SeminarRepository seminarRepository, BenutzerRepository benutzerRepository) {
+            SeminarRepository seminarRepository, BenutzerRepository benutzerRepository, Angemeldet angemeldet) {
         this.zertifikatRepository = zertifikatRepository;
         this.zertifikatService = zertifikatService;
         this.seminarRepository = seminarRepository;
         this.benutzerRepository = benutzerRepository;
+        this.angemeldet = angemeldet;
         addClassName("seite");
         setSizeFull();
 
@@ -58,8 +64,10 @@ public class ZertifikateView extends VerticalLayout {
         filter.setWidth("320px");
         filter.addValueChangeListener(e -> aktualisiere(e.getValue()));
 
-        HorizontalLayout toolbar = new HorizontalLayout(filter,
-                UiHilfe.primaer("Neues Zertifikat", VaadinIcon.PLUS, () -> bearbeite(neuesZertifikat())));
+        HorizontalLayout toolbar = new HorizontalLayout(filter);
+        if (angemeldet.istKursleiter()) {
+            toolbar.add(UiHilfe.primaer("Neues Zertifikat", VaadinIcon.PLUS, () -> bearbeite(neuesZertifikat())));
+        }
         toolbar.addClassName("toolbar");
 
         grid.addColumn(z -> z.getSeminar().getTitel()).setHeader("Seminar")
@@ -74,8 +82,10 @@ public class ZertifikateView extends VerticalLayout {
                 .setComparator(Comparator.comparing(Zertifikat::getGueltigBis, Comparator.nullsLast(Comparator.naturalOrder())))
                 .setAutoWidth(true);
         grid.addComponentColumn(ZertifikateView::dokumentLink).setWidth("60px").setFlexGrow(0);
-        grid.addComponentColumn(z -> UiHilfe.zeilenAktionen(() -> bearbeite(z), () -> loesche(z)))
-                .setWidth("110px").setFlexGrow(0);
+        if (angemeldet.istKursleiter()) {
+            grid.addComponentColumn(z -> UiHilfe.zeilenAktionen(() -> bearbeite(z), () -> loesche(z)))
+                    .setWidth("110px").setFlexGrow(0);
+        }
         grid.setSizeFull();
 
         add(toolbar, grid);
@@ -113,8 +123,10 @@ public class ZertifikateView extends VerticalLayout {
     }
 
     private void aktualisiere(Seminar seminar) {
-        grid.setItems(seminar == null ? zertifikatRepository.findAll()
-                : zertifikatRepository.findBySeminarId(seminar.getId()));
+        grid.setItems((seminar == null ? zertifikatRepository.findAll()
+                : zertifikatRepository.findBySeminarId(seminar.getId())).stream()
+                .filter(z -> angemeldet.darfSehen(z.getTeilnehmer()))
+                .toList());
     }
 
     private Zertifikat neuesZertifikat() {

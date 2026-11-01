@@ -29,6 +29,7 @@ import de.jakub.seminarverwaltung.seminar.OnlineSeminar;
 import de.jakub.seminarverwaltung.seminar.PraesenzSeminar;
 import de.jakub.seminarverwaltung.seminar.Seminar;
 import de.jakub.seminarverwaltung.seminar.SeminarService;
+import de.jakub.seminarverwaltung.sicherheit.Angemeldet;
 import de.jakub.seminarverwaltung.unterlage.Schulungsunterlage;
 import de.jakub.seminarverwaltung.unterlage.SchulungsunterlageRepository;
 import de.jakub.seminarverwaltung.wetter.Wetter;
@@ -36,7 +37,10 @@ import de.jakub.seminarverwaltung.wetter.WetterService;
 import de.jakub.seminarverwaltung.zertifikat.Zertifikat;
 import de.jakub.seminarverwaltung.zertifikat.ZertifikatRepository;
 
-/** 360°-Sicht auf ein Seminar: Stammdaten, Kursleiter, Wetter, Teilnehmer, Zertifikate und Unterlagen. */
+/**
+ * 360°-Sicht auf ein Seminar: Stammdaten, Kursleiter, Wetter, Teilnehmer, Zertifikate und Unterlagen.
+ * Teilnehmer sehen keine anderen Personen und ändern nur die eigene Anmeldung.
+ */
 class SeminarDetailDialog extends Dialog {
 
     private final SeminareView liste;
@@ -45,6 +49,7 @@ class SeminarDetailDialog extends Dialog {
     private final WetterService wetterService;
     private final ZertifikatRepository zertifikatRepository;
     private final SchulungsunterlageRepository unterlageRepository;
+    private final Angemeldet angemeldet;
 
     private final Div inhalt = new Div();
 
@@ -53,30 +58,36 @@ class SeminarDetailDialog extends Dialog {
 
     SeminarDetailDialog(Seminar seminar, SeminareView liste, SeminarService seminarService,
             BenutzerRepository benutzerRepository, WetterService wetterService,
-            ZertifikatRepository zertifikatRepository, SchulungsunterlageRepository unterlageRepository) {
+            ZertifikatRepository zertifikatRepository, SchulungsunterlageRepository unterlageRepository,
+            Angemeldet angemeldet) {
         this.liste = liste;
         this.seminarService = seminarService;
         this.benutzerRepository = benutzerRepository;
         this.wetterService = wetterService;
         this.zertifikatRepository = zertifikatRepository;
         this.unterlageRepository = unterlageRepository;
+        this.angemeldet = angemeldet;
 
         setWidth("min(980px, 96vw)");
         inhalt.addClassName("detail");
         add(inhalt);
 
         Button schliessen = new Button("Schließen", e -> close());
-        Button bearbeiten = new Button("Bearbeiten", VaadinIcon.EDIT.create(), e -> {
-            close();
-            liste.bearbeite(this.seminar);
-        });
-        bearbeiten.addThemeVariants(ButtonVariant.PRIMARY);
-        Button loeschen = new Button("Löschen", VaadinIcon.TRASH.create(), e -> {
-            close();
-            liste.loesche(this.seminar);
-        });
-        loeschen.addThemeVariants(ButtonVariant.ERROR, ButtonVariant.TERTIARY);
-        getFooter().add(loeschen, schliessen, bearbeiten);
+        if (angemeldet.istKursleiter()) {
+            Button bearbeiten = new Button("Bearbeiten", VaadinIcon.EDIT.create(), e -> {
+                close();
+                liste.bearbeite(this.seminar);
+            });
+            bearbeiten.addThemeVariants(ButtonVariant.PRIMARY);
+            Button loeschen = new Button("Löschen", VaadinIcon.TRASH.create(), e -> {
+                close();
+                liste.loesche(this.seminar);
+            });
+            loeschen.addThemeVariants(ButtonVariant.ERROR, ButtonVariant.TERTIARY);
+            getFooter().add(loeschen, schliessen, bearbeiten);
+        } else {
+            getFooter().add(schliessen);
+        }
 
         zeige(seminar);
     }
@@ -94,7 +105,8 @@ class SeminarDetailDialog extends Dialog {
         if (seminar.getBeschreibung() != null) {
             inhalt.add(new Paragraph(seminar.getBeschreibung()));
         }
-        Div unten = new Div(teilnehmer(seminar), zertifikateUndUnterlagen(seminar));
+        Div unten = new Div(angemeldet.istKursleiter() ? teilnehmer(seminar) : eigeneTeilnahme(seminar),
+                zertifikateUndUnterlagen(seminar));
         unten.addClassName("zwei-spalten");
         inhalt.add(unten);
     }
@@ -134,8 +146,11 @@ class SeminarDetailDialog extends Dialog {
         if (seminar instanceof OnlineSeminar online) {
             karte.setTitle("Online-Meeting");
             karte.add(zeile("Plattform", online.getPlattform() == null ? "–" : online.getPlattform()));
-            Anchor link = new Anchor(online.getMeetingLink(), "Meeting öffnen", AnchorTarget.BLANK);
-            karte.add(link);
+            if (angemeldet.istKursleiter() || nimmtTeil(seminar)) {
+                karte.add(new Anchor(online.getMeetingLink(), "Meeting öffnen", AnchorTarget.BLANK));
+            } else {
+                karte.add(new Span("Den Link siehst du nach der Anmeldung."));
+            }
             return karte;
         }
         PraesenzSeminar praesenz = (PraesenzSeminar) seminar;
@@ -210,6 +225,42 @@ class SeminarDetailDialog extends Dialog {
         return karte;
     }
 
+    private Card eigeneTeilnahme(Seminar seminar) {
+        Long ich = angemeldet.benutzer().getId();
+        Card karte = new Card();
+        karte.setTitle("Meine Teilnahme");
+
+        int warteplatz = seminar.getWarteliste().stream().map(Benutzer::getId).toList().indexOf(ich);
+        if (nimmtTeil(seminar)) {
+            karte.add(teilnahmeZeile("Du bist angemeldet.",
+                    "Abmelden", () -> seminarService.abmelden(seminar.getId(), ich)));
+        } else if (warteplatz >= 0) {
+            karte.add(teilnahmeZeile("Du stehst auf Platz " + (warteplatz + 1) + " der Warteliste.",
+                    "Von der Warteliste nehmen", () -> seminarService.vonWarteliste(seminar.getId(), ich)));
+        } else if (seminar.isAusgebucht()) {
+            karte.add(teilnahmeZeile("Das Seminar ist ausgebucht.",
+                    "Auf Warteliste", () -> seminarService.aufWarteliste(seminar.getId(), ich)));
+        } else {
+            karte.add(teilnahmeZeile("Es sind noch Plätze frei.",
+                    "Anmelden", () -> seminarService.anmelden(seminar.getId(), ich)));
+        }
+        return karte;
+    }
+
+    private boolean nimmtTeil(Seminar seminar) {
+        return seminar.getTeilnehmer().stream().anyMatch(angemeldet::istSelbst);
+    }
+
+    private Component teilnahmeZeile(String text, String buttonText, Supplier<Seminar> aktion) {
+        Button button = new Button(buttonText, e -> aendereTeilnahme(aktion));
+        button.addThemeVariants(ButtonVariant.PRIMARY);
+        Span textSpan = new Span(text);
+        textSpan.addClassName("wachsen");
+        Div zeile = new Div(textSpan, button);
+        zeile.addClassName("zeile-kopf");
+        return zeile;
+    }
+
     private Component personZeile(Benutzer person, String entfernenText, Supplier<Seminar> entfernen) {
         String name = person.getVorname() + " " + person.getNachname();
         Avatar avatar = new Avatar(name);
@@ -238,7 +289,9 @@ class SeminarDetailDialog extends Dialog {
         Card karte = new Card();
         karte.setTitle("Zertifikate & Unterlagen");
 
-        List<Zertifikat> zertifikate = zertifikatRepository.findBySeminarId(seminar.getId());
+        List<Zertifikat> zertifikate = zertifikatRepository.findBySeminarId(seminar.getId()).stream()
+                .filter(z -> angemeldet.darfSehen(z.getTeilnehmer()))
+                .toList();
         for (Zertifikat z : zertifikate) {
             Badge niveau = new Badge("Niveau " + z.getNiveau());
             niveau.addThemeVariants(BadgeVariant.SUCCESS);
@@ -246,7 +299,9 @@ class SeminarDetailDialog extends Dialog {
             rechts.addClassName("zeile-kopf");
             karte.add(eintrag(VaadinIcon.DIPLOMA, z.getTeilnehmer().getVorname() + " " + z.getTeilnehmer().getNachname(), rechts));
         }
-        List<Schulungsunterlage> unterlagen = unterlageRepository.findBySeminarId(seminar.getId());
+        List<Schulungsunterlage> unterlagen = unterlageRepository.findBySeminarId(seminar.getId()).stream()
+                .filter(u -> u.getBenutzer() == null || angemeldet.darfSehen(u.getBenutzer()))
+                .toList();
         for (Schulungsunterlage u : unterlagen) {
             karte.add(eintrag(VaadinIcon.BOOK, u.getTitel(), UnterlagenView.statusBadge(u)));
         }

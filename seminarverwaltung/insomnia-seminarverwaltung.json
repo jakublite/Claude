@@ -18,21 +18,24 @@
                           "parentId":  "wrk_seminarverwaltung",
                           "name":  "Base Environment",
                           "data":  {
-                                       "base_url":  "http://localhost:8080"
+                                       "base_url":  "http://localhost:8080",
+                                       "email":  "anna.berger@example.com",
+                                       "passwort":  "demo1234",
+                                       "teilnehmer_email":  "hannah.vogel@example.com"
                                    }
                       },
                       {
                           "_id":  "fld_1",
                           "_type":  "request_group",
                           "parentId":  "wrk_seminarverwaltung",
-                          "name":  "Seminare",
+                          "name":  "Sicherheit",
                           "metaSortKey":  1000
                       },
                       {
                           "_id":  "req_1",
                           "_type":  "request",
                           "parentId":  "fld_1",
-                          "name":  "Alle Seminare [200]",
+                          "name":  "Ohne Login abgelehnt [401]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/seminare",
                           "body":  {
@@ -53,6 +56,163 @@
                           "_id":  "req_2",
                           "_type":  "request",
                           "parentId":  "fld_1",
+                          "name":  "Falsches Passwort abgelehnt [401]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "falsch"
+                                             },
+                          "metaSortKey":  2
+                      },
+                      {
+                          "_id":  "req_3",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Teilnehmer: API gesperrt [403]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/benutzer",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.teilnehmer_email }}",
+                                                 "password":  "{{ _.passwort }}"
+                                             },
+                          "metaSortKey":  3
+                      },
+                      {
+                          "_id":  "req_4",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Teilnehmer: eigenes Zertifikat [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/zertifikate/1/dokument",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.teilnehmer_email }}",
+                                                 "password":  "{{ _.passwort }}"
+                                             },
+                          "metaSortKey":  4
+                      },
+                      {
+                          "_id":  "req_5",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Teilnehmer: fremdes Zertifikat gesperrt [403]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/zertifikate/2/dokument",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.teilnehmer_email }}",
+                                                 "password":  "{{ _.passwort }}"
+                                             },
+                          "metaSortKey":  5
+                      },
+                      {
+                          "_id":  "req_6",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Teilnehmer: Teilnehmerliste gesperrt [403]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare/8/teilnehmerliste.csv",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.teilnehmer_email }}",
+                                                 "password":  "{{ _.passwort }}"
+                                             },
+                          "metaSortKey":  6
+                      },
+                      {
+                          "_id":  "fld_2",
+                          "_type":  "request_group",
+                          "parentId":  "wrk_seminarverwaltung",
+                          "name":  "Seminare",
+                          "metaSortKey":  2000
+                      },
+                      {
+                          "_id":  "req_7",
+                          "_type":  "request",
+                          "parentId":  "fld_2",
+                          "name":  "Alle Seminare [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
+                                             },
+                          "metaSortKey":  7
+                      },
+                      {
+                          "_id":  "req_8",
+                          "_type":  "request",
+                          "parentId":  "fld_2",
                           "name":  "Suche nach Titel [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/seminare?titel=java",
@@ -66,14 +226,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  2
+                          "metaSortKey":  8
                       },
                       {
-                          "_id":  "req_3",
+                          "_id":  "req_9",
                           "_type":  "request",
-                          "parentId":  "fld_1",
+                          "parentId":  "fld_2",
                           "name":  "Präsenz-Seminar laden [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/seminare/7",
@@ -87,14 +251,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  3
+                          "metaSortKey":  9
                       },
                       {
-                          "_id":  "req_4",
+                          "_id":  "req_10",
                           "_type":  "request",
-                          "parentId":  "fld_1",
+                          "parentId":  "fld_2",
                           "name":  "Online-Seminar anlegen [201]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/seminare",
@@ -112,14 +280,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  4
+                          "metaSortKey":  10
                       },
                       {
-                          "_id":  "req_5",
+                          "_id":  "req_11",
                           "_type":  "request",
-                          "parentId":  "fld_1",
+                          "parentId":  "fld_2",
                           "name":  "Präsenz-Seminar anlegen [201]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/seminare",
@@ -137,14 +309,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  5
+                          "metaSortKey":  11
                       },
                       {
-                          "_id":  "req_6",
+                          "_id":  "req_12",
                           "_type":  "request",
-                          "parentId":  "fld_1",
+                          "parentId":  "fld_2",
                           "name":  "Seminar ändern (Teilnehmer bleiben) [200]",
                           "method":  "PUT",
                           "url":  "{{ _.base_url }}/api/seminare/6",
@@ -162,14 +338,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  6
+                          "metaSortKey":  12
                       },
                       {
-                          "_id":  "req_7",
+                          "_id":  "req_13",
                           "_type":  "request",
-                          "parentId":  "fld_1",
+                          "parentId":  "fld_2",
                           "name":  "Seminar löschen [204]",
                           "method":  "DELETE",
                           "url":  "{{ _.base_url }}/api/seminare/13",
@@ -183,14 +363,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  7
+                          "metaSortKey":  13
                       },
                       {
-                          "_id":  "req_8",
+                          "_id":  "req_14",
                           "_type":  "request",
-                          "parentId":  "fld_1",
+                          "parentId":  "fld_2",
                           "name":  "Fehler: Seminartyp wechseln [400]",
                           "method":  "PUT",
                           "url":  "{{ _.base_url }}/api/seminare/6",
@@ -208,14 +392,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  8
+                          "metaSortKey":  14
                       },
                       {
-                          "_id":  "req_9",
+                          "_id":  "req_15",
                           "_type":  "request",
-                          "parentId":  "fld_1",
+                          "parentId":  "fld_2",
                           "name":  "Fehler: Ende vor Start [400]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/seminare",
@@ -233,14 +421,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  9
+                          "metaSortKey":  15
                       },
                       {
-                          "_id":  "req_10",
+                          "_id":  "req_16",
                           "_type":  "request",
-                          "parentId":  "fld_1",
+                          "parentId":  "fld_2",
                           "name":  "Fehler: Seminar mit Unterlage löschen [409]",
                           "method":  "DELETE",
                           "url":  "{{ _.base_url }}/api/seminare/10",
@@ -254,14 +446,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  10
+                          "metaSortKey":  16
                       },
                       {
-                          "_id":  "req_11",
+                          "_id":  "req_17",
                           "_type":  "request",
-                          "parentId":  "fld_1",
+                          "parentId":  "fld_2",
                           "name":  "Fehler: Seminar nicht gefunden [404]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/seminare/9999",
@@ -275,21 +471,25 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  11
+                          "metaSortKey":  17
                       },
                       {
-                          "_id":  "fld_2",
+                          "_id":  "fld_3",
                           "_type":  "request_group",
                           "parentId":  "wrk_seminarverwaltung",
                           "name":  "Anmeldung",
-                          "metaSortKey":  2000
+                          "metaSortKey":  3000
                       },
                       {
-                          "_id":  "req_12",
+                          "_id":  "req_18",
                           "_type":  "request",
-                          "parentId":  "fld_2",
+                          "parentId":  "fld_3",
                           "name":  "Lena für Clean Code anmelden [200]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/seminare/10/teilnehmer/5",
@@ -303,14 +503,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  12
+                          "metaSortKey":  18
                       },
                       {
-                          "_id":  "req_13",
+                          "_id":  "req_19",
                           "_type":  "request",
-                          "parentId":  "fld_2",
+                          "parentId":  "fld_3",
                           "name":  "Fehler: schon angemeldet [409]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/seminare/10/teilnehmer/5",
@@ -324,14 +528,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  13
+                          "metaSortKey":  19
                       },
                       {
-                          "_id":  "req_14",
+                          "_id":  "req_20",
                           "_type":  "request",
-                          "parentId":  "fld_2",
+                          "parentId":  "fld_3",
                           "name":  "Lena wieder abmelden [200]",
                           "method":  "DELETE",
                           "url":  "{{ _.base_url }}/api/seminare/10/teilnehmer/5",
@@ -345,14 +553,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  14
+                          "metaSortKey":  20
                       },
                       {
-                          "_id":  "req_15",
+                          "_id":  "req_21",
                           "_type":  "request",
-                          "parentId":  "fld_2",
+                          "parentId":  "fld_3",
                           "name":  "Fehler: nicht angemeldet [404]",
                           "method":  "DELETE",
                           "url":  "{{ _.base_url }}/api/seminare/10/teilnehmer/5",
@@ -366,14 +578,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  15
+                          "metaSortKey":  21
                       },
                       {
-                          "_id":  "req_16",
+                          "_id":  "req_22",
                           "_type":  "request",
-                          "parentId":  "fld_2",
+                          "parentId":  "fld_3",
                           "name":  "Fehler: Seminar ausgebucht [409]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/seminare/8/teilnehmer/10",
@@ -387,14 +603,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  16
+                          "metaSortKey":  22
                       },
                       {
-                          "_id":  "req_17",
+                          "_id":  "req_23",
                           "_type":  "request",
-                          "parentId":  "fld_2",
+                          "parentId":  "fld_3",
                           "name":  "Fehler: Kursleiter meldet sich selbst an [409]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/seminare/10/teilnehmer/2",
@@ -408,21 +628,25 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  17
+                          "metaSortKey":  23
                       },
                       {
-                          "_id":  "fld_3",
+                          "_id":  "fld_4",
                           "_type":  "request_group",
                           "parentId":  "wrk_seminarverwaltung",
                           "name":  "Benutzer",
-                          "metaSortKey":  3000
+                          "metaSortKey":  4000
                       },
                       {
-                          "_id":  "req_18",
+                          "_id":  "req_24",
                           "_type":  "request",
-                          "parentId":  "fld_3",
+                          "parentId":  "fld_4",
                           "name":  "Alle Benutzer [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/benutzer",
@@ -436,14 +660,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  18
+                          "metaSortKey":  24
                       },
                       {
-                          "_id":  "req_19",
+                          "_id":  "req_25",
                           "_type":  "request",
-                          "parentId":  "fld_3",
+                          "parentId":  "fld_4",
                           "name":  "Suche nach Nachname [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/benutzer?nachname=berger",
@@ -457,14 +685,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  19
+                          "metaSortKey":  25
                       },
                       {
-                          "_id":  "req_20",
+                          "_id":  "req_26",
                           "_type":  "request",
-                          "parentId":  "fld_3",
+                          "parentId":  "fld_4",
                           "name":  "Benutzer laden [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/benutzer/5",
@@ -478,14 +710,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  20
+                          "metaSortKey":  26
                       },
                       {
-                          "_id":  "req_21",
+                          "_id":  "req_27",
                           "_type":  "request",
-                          "parentId":  "fld_3",
+                          "parentId":  "fld_4",
                           "name":  "Benutzer anlegen [201]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/benutzer",
@@ -503,14 +739,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  21
+                          "metaSortKey":  27
                       },
                       {
-                          "_id":  "req_22",
+                          "_id":  "req_28",
                           "_type":  "request",
-                          "parentId":  "fld_3",
+                          "parentId":  "fld_4",
                           "name":  "Benutzer ändern [200]",
                           "method":  "PUT",
                           "url":  "{{ _.base_url }}/api/benutzer/20",
@@ -528,14 +768,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  22
+                          "metaSortKey":  28
                       },
                       {
-                          "_id":  "req_23",
+                          "_id":  "req_29",
                           "_type":  "request",
-                          "parentId":  "fld_3",
+                          "parentId":  "fld_4",
                           "name":  "Fehler: E-Mail doppelt [409]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/benutzer",
@@ -553,14 +797,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  23
+                          "metaSortKey":  29
                       },
                       {
-                          "_id":  "req_24",
+                          "_id":  "req_30",
                           "_type":  "request",
-                          "parentId":  "fld_3",
+                          "parentId":  "fld_4",
                           "name":  "Fehler: E-Mail ungültig [400]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/benutzer",
@@ -578,14 +826,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  24
+                          "metaSortKey":  30
                       },
                       {
-                          "_id":  "req_25",
+                          "_id":  "req_31",
                           "_type":  "request",
-                          "parentId":  "fld_3",
+                          "parentId":  "fld_4",
                           "name":  "Fehler: Kursleiter löschen [409]",
                           "method":  "DELETE",
                           "url":  "{{ _.base_url }}/api/benutzer/1",
@@ -599,21 +851,25 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  25
+                          "metaSortKey":  31
                       },
                       {
-                          "_id":  "fld_4",
+                          "_id":  "fld_5",
                           "_type":  "request_group",
                           "parentId":  "wrk_seminarverwaltung",
                           "name":  "Zertifikate",
-                          "metaSortKey":  4000
+                          "metaSortKey":  5000
                       },
                       {
-                          "_id":  "req_26",
+                          "_id":  "req_32",
                           "_type":  "request",
-                          "parentId":  "fld_4",
+                          "parentId":  "fld_5",
                           "name":  "Alle Zertifikate [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/zertifikate",
@@ -627,14 +883,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  26
+                          "metaSortKey":  32
                       },
                       {
-                          "_id":  "req_27",
+                          "_id":  "req_33",
                           "_type":  "request",
-                          "parentId":  "fld_4",
+                          "parentId":  "fld_5",
                           "name":  "Zertifikate eines Seminars [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/zertifikate?seminarId=2",
@@ -648,14 +908,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  27
+                          "metaSortKey":  33
                       },
                       {
-                          "_id":  "req_28",
+                          "_id":  "req_34",
                           "_type":  "request",
-                          "parentId":  "fld_4",
+                          "parentId":  "fld_5",
                           "name":  "Zertifikat laden [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/zertifikate/1",
@@ -669,14 +933,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  28
+                          "metaSortKey":  34
                       },
                       {
-                          "_id":  "req_29",
+                          "_id":  "req_35",
                           "_type":  "request",
-                          "parentId":  "fld_4",
+                          "parentId":  "fld_5",
                           "name":  "Zertifikat anlegen [201]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/zertifikate",
@@ -694,14 +962,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  29
+                          "metaSortKey":  35
                       },
                       {
-                          "_id":  "req_30",
+                          "_id":  "req_36",
                           "_type":  "request",
-                          "parentId":  "fld_4",
+                          "parentId":  "fld_5",
                           "name":  "Zertifikat ändern [200]",
                           "method":  "PUT",
                           "url":  "{{ _.base_url }}/api/zertifikate/3",
@@ -719,14 +991,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  30
+                          "metaSortKey":  36
                       },
                       {
-                          "_id":  "req_31",
+                          "_id":  "req_37",
                           "_type":  "request",
-                          "parentId":  "fld_4",
+                          "parentId":  "fld_5",
                           "name":  "Zertifikat löschen [204]",
                           "method":  "DELETE",
                           "url":  "{{ _.base_url }}/api/zertifikate/15",
@@ -740,14 +1016,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  31
+                          "metaSortKey":  37
                       },
                       {
-                          "_id":  "req_32",
+                          "_id":  "req_38",
                           "_type":  "request",
-                          "parentId":  "fld_4",
+                          "parentId":  "fld_5",
                           "name":  "Fehler: Pflichtfelder fehlen [400]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/zertifikate",
@@ -765,21 +1045,25 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  32
+                          "metaSortKey":  38
                       },
                       {
-                          "_id":  "fld_5",
+                          "_id":  "fld_6",
                           "_type":  "request_group",
                           "parentId":  "wrk_seminarverwaltung",
                           "name":  "Unterlagen",
-                          "metaSortKey":  5000
+                          "metaSortKey":  6000
                       },
                       {
-                          "_id":  "req_33",
+                          "_id":  "req_39",
                           "_type":  "request",
-                          "parentId":  "fld_5",
+                          "parentId":  "fld_6",
                           "name":  "Alle Unterlagen [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/unterlagen",
@@ -793,14 +1077,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  33
+                          "metaSortKey":  39
                       },
                       {
-                          "_id":  "req_34",
+                          "_id":  "req_40",
                           "_type":  "request",
-                          "parentId":  "fld_5",
+                          "parentId":  "fld_6",
                           "name":  "Suche nach Titel (überfällig) [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/unterlagen?titel=insel",
@@ -814,14 +1102,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  34
+                          "metaSortKey":  40
                       },
                       {
-                          "_id":  "req_35",
+                          "_id":  "req_41",
                           "_type":  "request",
-                          "parentId":  "fld_5",
+                          "parentId":  "fld_6",
                           "name":  "Unterlage kaufen [201]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/unterlagen",
@@ -839,14 +1131,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  35
+                          "metaSortKey":  41
                       },
                       {
-                          "_id":  "req_36",
+                          "_id":  "req_42",
                           "_type":  "request",
-                          "parentId":  "fld_5",
+                          "parentId":  "fld_6",
                           "name":  "Unterlage leihen [201]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/unterlagen",
@@ -864,14 +1160,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  36
+                          "metaSortKey":  42
                       },
                       {
-                          "_id":  "req_37",
+                          "_id":  "req_43",
                           "_type":  "request",
-                          "parentId":  "fld_5",
+                          "parentId":  "fld_6",
                           "name":  "Unterlage ändern (Leihe zurückdatieren) [200]",
                           "method":  "PUT",
                           "url":  "{{ _.base_url }}/api/unterlagen/6",
@@ -889,14 +1189,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  37
+                          "metaSortKey":  43
                       },
                       {
-                          "_id":  "req_38",
+                          "_id":  "req_44",
                           "_type":  "request",
-                          "parentId":  "fld_5",
+                          "parentId":  "fld_6",
                           "name":  "Unterlage löschen [204]",
                           "method":  "DELETE",
                           "url":  "{{ _.base_url }}/api/unterlagen/15",
@@ -910,14 +1214,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  38
+                          "metaSortKey":  44
                       },
                       {
-                          "_id":  "req_39",
+                          "_id":  "req_45",
                           "_type":  "request",
-                          "parentId":  "fld_5",
+                          "parentId":  "fld_6",
                           "name":  "Fehler: Leihen ohne verfuegbarBis [400]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/unterlagen",
@@ -935,21 +1243,25 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  39
+                          "metaSortKey":  45
                       },
                       {
-                          "_id":  "fld_6",
+                          "_id":  "fld_7",
                           "_type":  "request_group",
                           "parentId":  "wrk_seminarverwaltung",
                           "name":  "Wetter",
-                          "metaSortKey":  6000
+                          "metaSortKey":  7000
                       },
                       {
-                          "_id":  "req_40",
+                          "_id":  "req_46",
                           "_type":  "request",
-                          "parentId":  "fld_6",
+                          "parentId":  "fld_7",
                           "name":  "Wetter als JSON (Augsburg) [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/seminare/7/wetter",
@@ -963,14 +1275,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  40
+                          "metaSortKey":  46
                       },
                       {
-                          "_id":  "req_41",
+                          "_id":  "req_47",
                           "_type":  "request",
-                          "parentId":  "fld_6",
+                          "parentId":  "fld_7",
                           "name":  "Wetter als HTML (Augsburg) [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/seminare/7/wetter/html",
@@ -984,14 +1300,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  41
+                          "metaSortKey":  47
                       },
                       {
-                          "_id":  "req_42",
+                          "_id":  "req_48",
                           "_type":  "request",
-                          "parentId":  "fld_6",
+                          "parentId":  "fld_7",
                           "name":  "Fehler: Online-Seminar hat kein Wetter [404]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/seminare/6/wetter",
@@ -1005,14 +1325,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  42
+                          "metaSortKey":  48
                       },
                       {
-                          "_id":  "req_43",
+                          "_id":  "req_49",
                           "_type":  "request",
-                          "parentId":  "fld_6",
+                          "parentId":  "fld_7",
                           "name":  "Fehler: Ort unbekannt [404]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/seminare/14/wetter",
@@ -1026,21 +1350,25 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  43
+                          "metaSortKey":  49
                       },
                       {
-                          "_id":  "fld_7",
+                          "_id":  "fld_8",
                           "_type":  "request_group",
                           "parentId":  "wrk_seminarverwaltung",
                           "name":  "Import",
-                          "metaSortKey":  7000
+                          "metaSortKey":  8000
                       },
                       {
-                          "_id":  "req_44",
+                          "_id":  "req_50",
                           "_type":  "request",
-                          "parentId":  "fld_7",
+                          "parentId":  "fld_8",
                           "name":  "JSON-Import (schnittstelle.json) [200]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/import/json",
@@ -1058,14 +1386,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  44
+                          "metaSortKey":  50
                       },
                       {
-                          "_id":  "req_45",
+                          "_id":  "req_51",
                           "_type":  "request",
-                          "parentId":  "fld_7",
+                          "parentId":  "fld_8",
                           "name":  "Fehler: gleicher Import noch einmal [409]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/import/json",
@@ -1083,21 +1415,25 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  45
+                          "metaSortKey":  51
                       },
                       {
-                          "_id":  "fld_8",
+                          "_id":  "fld_9",
                           "_type":  "request_group",
                           "parentId":  "wrk_seminarverwaltung",
                           "name":  "Warteliste",
-                          "metaSortKey":  8000
+                          "metaSortKey":  9000
                       },
                       {
-                          "_id":  "req_46",
+                          "_id":  "req_52",
                           "_type":  "request",
-                          "parentId":  "fld_8",
+                          "parentId":  "fld_9",
                           "name":  "Jan auf die Warteliste setzen [200]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/seminare/8/warteliste/10",
@@ -1111,14 +1447,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  46
+                          "metaSortKey":  52
                       },
                       {
-                          "_id":  "req_47",
+                          "_id":  "req_53",
                           "_type":  "request",
-                          "parentId":  "fld_8",
+                          "parentId":  "fld_9",
                           "name":  "Fehler: schon auf der Warteliste [409]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/seminare/8/warteliste/10",
@@ -1132,14 +1472,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  47
+                          "metaSortKey":  53
                       },
                       {
-                          "_id":  "req_48",
+                          "_id":  "req_54",
                           "_type":  "request",
-                          "parentId":  "fld_8",
+                          "parentId":  "fld_9",
                           "name":  "Fehler: Seminar hat noch Plätze [409]",
                           "method":  "POST",
                           "url":  "{{ _.base_url }}/api/seminare/10/warteliste/10",
@@ -1153,14 +1497,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  48
+                          "metaSortKey":  54
                       },
                       {
-                          "_id":  "req_49",
+                          "_id":  "req_55",
                           "_type":  "request",
-                          "parentId":  "fld_8",
+                          "parentId":  "fld_9",
                           "name":  "Jan von der Warteliste nehmen [200]",
                           "method":  "DELETE",
                           "url":  "{{ _.base_url }}/api/seminare/8/warteliste/10",
@@ -1174,14 +1522,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  49
+                          "metaSortKey":  55
                       },
                       {
-                          "_id":  "req_50",
+                          "_id":  "req_56",
                           "_type":  "request",
-                          "parentId":  "fld_8",
+                          "parentId":  "fld_9",
                           "name":  "Fehler: steht nicht auf der Warteliste [404]",
                           "method":  "DELETE",
                           "url":  "{{ _.base_url }}/api/seminare/8/warteliste/10",
@@ -1195,14 +1547,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  50
+                          "metaSortKey":  56
                       },
                       {
-                          "_id":  "req_51",
+                          "_id":  "req_57",
                           "_type":  "request",
-                          "parentId":  "fld_8",
+                          "parentId":  "fld_9",
                           "name":  "Sophie abmelden, Lena rückt nach [200]",
                           "method":  "DELETE",
                           "url":  "{{ _.base_url }}/api/seminare/8/teilnehmer/7",
@@ -1216,14 +1572,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  51
+                          "metaSortKey":  57
                       },
                       {
-                          "_id":  "req_52",
+                          "_id":  "req_58",
                           "_type":  "request",
-                          "parentId":  "fld_8",
+                          "parentId":  "fld_9",
                           "name":  "Seminar prüfen: Lena dabei, Murat wartet [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/seminare/8",
@@ -1237,21 +1597,25 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  52
+                          "metaSortKey":  58
                       },
                       {
-                          "_id":  "fld_9",
+                          "_id":  "fld_10",
                           "_type":  "request_group",
                           "parentId":  "wrk_seminarverwaltung",
                           "name":  "Postausgang",
-                          "metaSortKey":  9000
+                          "metaSortKey":  10000
                       },
                       {
-                          "_id":  "req_53",
+                          "_id":  "req_59",
                           "_type":  "request",
-                          "parentId":  "fld_9",
+                          "parentId":  "fld_10",
                           "name":  "Alle E-Mails [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/nachrichten",
@@ -1265,14 +1629,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  53
+                          "metaSortKey":  59
                       },
                       {
-                          "_id":  "req_54",
+                          "_id":  "req_60",
                           "_type":  "request",
-                          "parentId":  "fld_9",
+                          "parentId":  "fld_10",
                           "name":  "E-Mails von Lena [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/nachrichten?empfaenger=lena",
@@ -1286,21 +1654,25 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  54
+                          "metaSortKey":  60
                       },
                       {
-                          "_id":  "fld_10",
+                          "_id":  "fld_11",
                           "_type":  "request_group",
                           "parentId":  "wrk_seminarverwaltung",
                           "name":  "Dokumente",
-                          "metaSortKey":  10000
+                          "metaSortKey":  11000
                       },
                       {
-                          "_id":  "req_55",
+                          "_id":  "req_61",
                           "_type":  "request",
-                          "parentId":  "fld_10",
+                          "parentId":  "fld_11",
                           "name":  "Teilnehmerliste als CSV [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/seminare/8/teilnehmerliste.csv",
@@ -1314,14 +1686,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  55
+                          "metaSortKey":  61
                       },
                       {
-                          "_id":  "req_56",
+                          "_id":  "req_62",
                           "_type":  "request",
-                          "parentId":  "fld_10",
+                          "parentId":  "fld_11",
                           "name":  "Fehler: CSV für unbekanntes Seminar [404]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/seminare/9999/teilnehmerliste.csv",
@@ -1335,14 +1711,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  56
+                          "metaSortKey":  62
                       },
                       {
-                          "_id":  "req_57",
+                          "_id":  "req_63",
                           "_type":  "request",
-                          "parentId":  "fld_10",
+                          "parentId":  "fld_11",
                           "name":  "Zertifikat als HTML zum Drucken [200]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/zertifikate/1/dokument",
@@ -1356,14 +1736,18 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  57
+                          "metaSortKey":  63
                       },
                       {
-                          "_id":  "req_58",
+                          "_id":  "req_64",
                           "_type":  "request",
-                          "parentId":  "fld_10",
+                          "parentId":  "fld_11",
                           "name":  "Fehler: unbekanntes Zertifikat [404]",
                           "method":  "GET",
                           "url":  "{{ _.base_url }}/api/zertifikate/9999/dokument",
@@ -1377,9 +1761,13 @@
 
                                          ],
                           "authentication":  {
-
+                                                 "type":  "basic",
+                                                 "useISO88591":  false,
+                                                 "disabled":  false,
+                                                 "username":  "{{ _.email }}",
+                                                 "password":  "{{ _.passwort }}"
                                              },
-                          "metaSortKey":  58
+                          "metaSortKey":  64
                       }
                   ]
 }

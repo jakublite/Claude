@@ -1,8 +1,11 @@
 package de.jakub.seminarverwaltung.zertifikat;
 
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,11 +51,18 @@ public class ZertifikatController {
         return ResponseEntity.status(HttpStatus.CREATED).body(zertifikatService.ausstellen(zertifikat));
     }
 
+    /** Kursleiter dürfen jedes Zertifikat öffnen, Teilnehmer nur das eigene. */
     @GetMapping(value = "/{id}/dokument", produces = MediaType.TEXT_HTML_VALUE)
-    public ResponseEntity<Object> dokument(@PathVariable Long id) {
-        return zertifikatRepository.findById(id)
-                .<ResponseEntity<Object>>map(z -> ResponseEntity.ok(ZertifikatDokument.erzeuge(z)))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Object> dokument(@PathVariable Long id, Authentication angemeldet) {
+        Optional<Zertifikat> zertifikat = zertifikatRepository.findById(id);
+        if (zertifikat.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        boolean kursleiter = angemeldet.getAuthorities().stream().anyMatch(a -> "ROLE_KURSLEITER".equals(a.getAuthority()));
+        if (!kursleiter && !zertifikat.get().getTeilnehmer().getEmail().equals(angemeldet.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(ZertifikatDokument.erzeuge(zertifikat.get()));
     }
 
     @PutMapping("/{id}")

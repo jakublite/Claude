@@ -16,7 +16,18 @@ Die App läuft, sobald im Fenster `Started SeminarverwaltungApplication` steht. 
 
 - Oberfläche: http://localhost:8080
 - API: http://localhost:8080/api/...
-- H2-Console: http://localhost:8080/h2-console (JDBC URL `jdbc:h2:mem:seminar`, User `sa`, kein Passwort)
+- H2-Console: http://localhost:8080/h2-console (nur als Kursleiter angemeldet, JDBC URL `jdbc:h2:mem:seminar`, User `sa`, kein Passwort)
+
+## Anmelden
+
+Alle Demo-Benutzer haben das Passwort `demo1234` (`testdaten.demo-passwort`). Es steht offen im Repository und ist nur zum Ausprobieren gedacht.
+
+| Rolle | Beispiel-Login | Darf |
+|---|---|---|
+| Kursleiter | `anna.berger@example.com` | alles, inklusive Benutzer, Postausgang, Vorlagen und REST-API |
+| Teilnehmer | `hannah.vogel@example.com` | Seminare ansehen, sich selbst an- und abmelden, eigene Zertifikate und Unterlagen sehen |
+
+Passwörter vergibt ein Kursleiter unter Benutzer → Bearbeiten (8 bis 72 Zeichen). Gespeichert wird nur der BCrypt-Hash. Wer kein Passwort hat, z. B. nach dem JSON-Import oder `POST /api/benutzer`, kann sich nicht anmelden. Eine geänderte Rolle gilt erst nach dem nächsten Login.
 
 ## Daten
 
@@ -33,8 +44,23 @@ Die Demodaten haben feste Daten, Stand November 2026. Mit der Zeit werden aus ko
 
 ### Oberfläche
 
+Als Teilnehmer, z. B. `hannah.vogel@example.com`:
+
 | Was ausprobieren | Wo | Erwartung |
 |---|---|---|
+| Falsches Passwort | Login | Fehlermeldung, Formular bleibt offen |
+| Menü | Seitenleiste | nur Übersicht, Seminare, Zertifikate, Unterlagen |
+| Selbst anmelden | Seminare → „Clean Code Workshop“ | „Meine Teilnahme“ mit Anmelden, danach Abmelden. Keine anderen Personen sichtbar |
+| Warteliste | Seminare → „Spring Boot kompakt“ | „Auf Warteliste“, danach Anzeige des eigenen Platzes |
+| Gesperrte Seite | http://localhost:8080/benutzer direkt aufrufen | „Could not navigate to 'benutzer'“ |
+| Zertifikate | Zertifikate | nur die eigenen, ohne Bearbeiten |
+| Ausloggen | oben rechts | zurück zum Login |
+
+Als Kursleiter, z. B. `anna.berger@example.com`:
+
+| Was ausprobieren | Wo | Erwartung |
+|---|---|---|
+| Passwort vergeben | Benutzer → Neuer Benutzer, Passwort mit mindestens 8 Zeichen | neue Person kann sich anmelden |
 | Kennzahlen | Übersicht | 14 Seminare, 43 / 187 Plätze, 4 auf Warteliste, 20 Benutzer, 3 überfällige Ausleihen |
 | Nachrücken | Seminare → „Vaadin Flow Praxis“, bei Murat Yilmaz auf das rote X | Paul Weber rückt nach, Nina Koch bleibt auf der Warteliste |
 | Warteliste | Seminare → „Spring Boot kompakt“, Benutzer wählen, „Auf Warteliste“ | Person steht unten auf der Warteliste |
@@ -54,11 +80,11 @@ Die Demodaten haben feste Daten, Stand November 2026. Mit der Zeit werden aus ko
 
 ### REST mit Insomnia
 
-`insomnia-seminarverwaltung.json` über **Import** laden. Die 58 Requests liegen nach Themen sortiert in Ordnern, der erwartete Statuscode steht im Namen, z. B. `Fehler: Seminar ausgebucht [409]`.
+`insomnia-seminarverwaltung.json` über **Import** laden. Die 64 Requests liegen nach Themen sortiert in Ordnern, der erwartete Statuscode steht im Namen, z. B. `Fehler: Seminar ausgebucht [409]`. Die Zugangsdaten für HTTP Basic stehen im Environment.
 
 Die Requests bauen auf den Demodaten auf und ändern sie. Einmal von oben nach unten ausgeführt, liefert jeder den genannten Status. Für einen zweiten Durchlauf die App neu starten, denn z. B. `Benutzer anlegen` meldet sonst 409.
 
-Tests: `.\mvnw.cmd test` (REST, Fehlerantworten, Wetter mit gemocktem Dienst, Vaadin-Views per Browserless-Test)
+Tests: `.\mvnw.cmd test` (REST, Fehlerantworten, Login und Rollen, Wetter mit gemocktem Dienst, Vaadin-Views per Browserless-Test)
 
 Produktions-Jar bauen und starten (kein Node nötig, das Profil lässt `vaadin-dev` weg):
 
@@ -90,6 +116,18 @@ Produktions-Jar bauen und starten (kein Node nötig, das Profil lässt `vaadin-d
 
 360°-Sicht eines Seminars: Eckdaten mit Auslastung, Kursleiter als Visitenkarte, Wetter (Präsenz) oder Meeting-Link (online), Teilnehmer an- und abmelden, Warteliste, Teilnehmerliste als CSV, Zertifikate und Unterlagen des Seminars.
 
+## Sicherheit (Package `sicherheit`)
+
+| Bereich | Anmeldung | Zugriff |
+|---|---|---|
+| Oberfläche | Login-Formular mit Session | Annotationen an den Views: `@PermitAll` oder `@RolesAllowed("KURSLEITER")` |
+| `/api/**` | HTTP Basic, ohne Session | nur Kursleiter |
+| `/api/zertifikate/{id}/dokument` | HTTP Basic oder Session | Kursleiter und der Besitzer des Zertifikats |
+| `/api/seminare/{id}/teilnehmerliste.csv` | HTTP Basic oder Session | nur Kursleiter |
+| `/h2-console` | Session | nur Kursleiter, von H2 zusätzlich auf localhost beschränkt |
+
+Die REST-API ignoriert das Session-Cookie, deshalb kann eine fremde Webseite über einen angemeldeten Browser nichts ändern (CSRF). 401 kommt bewusst ohne `WWW-Authenticate`-Header, damit der Browser keinen Basic-Dialog zeigt und sich keine Zugangsdaten merkt. HTTP Basic überträgt das Passwort bei jedem Request, außerhalb von localhost wäre HTTPS Pflicht.
+
 ## Abläufe
 
 **Warteliste:** Bei einem ausgebuchten Seminar kommt man auf die Warteliste. Wird ein Platz frei, durch eine Abmeldung oder weil `maxTeilnehmer` erhöht wurde, rückt automatisch der Erste nach. Die Regeln liegen in `SeminarService`.
@@ -103,6 +141,8 @@ Hinweise:
 - `Seminar.teilnehmer` wird eager geladen, weil Vaadin-Requests nicht durch Open-Session-in-View laufen.
 
 ## Endpunkte
+
+Alle Endpunkte brauchen einen Login per HTTP Basic, siehe [Sicherheit](#sicherheit-package-sicherheit). Ohne Login kommt 401, ohne Berechtigung 403.
 
 Jede Entität hat CRUD: `GET` (Liste mit optionalem Suchparameter), `GET /{id}`, `POST`, `PUT /{id}`, `DELETE /{id}`.
 
@@ -152,4 +192,4 @@ Läuft über [Open-Meteo](https://open-meteo.com) (kostenlos, ohne API-Key): zue
 
 ## Ideen zum Ausbauen
 
-Aus der Aufgabenliste noch offen: echter E-Mail-Versand, Newsletter, Portal mit Registrierung und Login, Online-Terminvergabe.
+Aus der Aufgabenliste noch offen: echter E-Mail-Versand, Newsletter, Selbstregistrierung, eigenes Passwort ändern, Online-Terminvergabe.

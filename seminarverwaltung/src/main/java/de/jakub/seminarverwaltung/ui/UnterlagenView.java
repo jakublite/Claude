@@ -28,34 +28,42 @@ import de.jakub.seminarverwaltung.benutzer.Benutzer;
 import de.jakub.seminarverwaltung.benutzer.BenutzerRepository;
 import de.jakub.seminarverwaltung.seminar.Seminar;
 import de.jakub.seminarverwaltung.seminar.SeminarRepository;
+import de.jakub.seminarverwaltung.sicherheit.Angemeldet;
 import de.jakub.seminarverwaltung.unterlage.Art;
 import de.jakub.seminarverwaltung.unterlage.Bezugsart;
 import de.jakub.seminarverwaltung.unterlage.Schulungsunterlage;
 import de.jakub.seminarverwaltung.unterlage.SchulungsunterlageRepository;
+import jakarta.annotation.security.PermitAll;
 
+/** Teilnehmer sehen eigene und noch nicht vergebene Unterlagen und ändern nichts. */
 @Route("unterlagen")
 @PageTitle("Schulungsunterlagen")
+@PermitAll
 public class UnterlagenView extends VerticalLayout {
 
     private final SchulungsunterlageRepository unterlageRepository;
     private final SeminarRepository seminarRepository;
     private final BenutzerRepository benutzerRepository;
+    private final Angemeldet angemeldet;
     private final Grid<Schulungsunterlage> grid = new Grid<>();
     private final TextField suche;
     private final Checkbox nurUeberfaellige = new Checkbox("Nur überfällige");
 
     public UnterlagenView(SchulungsunterlageRepository unterlageRepository, SeminarRepository seminarRepository,
-            BenutzerRepository benutzerRepository) {
+            BenutzerRepository benutzerRepository, Angemeldet angemeldet) {
         this.unterlageRepository = unterlageRepository;
         this.seminarRepository = seminarRepository;
         this.benutzerRepository = benutzerRepository;
+        this.angemeldet = angemeldet;
         addClassName("seite");
         setSizeFull();
 
         suche = UiHilfe.suchfeld("Titel suchen …", t -> aktualisiere());
         nurUeberfaellige.addValueChangeListener(e -> aktualisiere());
-        HorizontalLayout toolbar = new HorizontalLayout(suche, nurUeberfaellige,
-                UiHilfe.primaer("Neue Unterlage", VaadinIcon.PLUS, () -> bearbeite(neueUnterlage())));
+        HorizontalLayout toolbar = new HorizontalLayout(suche, nurUeberfaellige);
+        if (angemeldet.istKursleiter()) {
+            toolbar.add(UiHilfe.primaer("Neue Unterlage", VaadinIcon.PLUS, () -> bearbeite(neueUnterlage())));
+        }
         toolbar.addClassName("toolbar");
         toolbar.setAlignItems(Alignment.CENTER);
 
@@ -73,8 +81,10 @@ public class UnterlagenView extends VerticalLayout {
                 .setComparator(u -> u.isUeberfaellig() ? 0 : u.isBezahlt() ? 2 : 1).setAutoWidth(true);
         grid.addColumn(u -> u.getBenutzer() == null ? "" : u.getBenutzer().getVorname() + " " + u.getBenutzer().getNachname())
                 .setHeader("Benutzer").setAutoWidth(true);
-        grid.addComponentColumn(u -> UiHilfe.zeilenAktionen(() -> bearbeite(u), () -> loesche(u)))
-                .setWidth("110px").setFlexGrow(0);
+        if (angemeldet.istKursleiter()) {
+            grid.addComponentColumn(u -> UiHilfe.zeilenAktionen(() -> bearbeite(u), () -> loesche(u)))
+                    .setWidth("110px").setFlexGrow(0);
+        }
         grid.setSizeFull();
 
         add(toolbar, grid);
@@ -119,6 +129,7 @@ public class UnterlagenView extends VerticalLayout {
         grid.setItems((titel.isBlank() ? unterlageRepository.findAll()
                 : unterlageRepository.findByTitelContainingIgnoreCase(titel)).stream()
                 .filter(u -> !nurUeberfaellige.getValue() || u.isUeberfaellig())
+                .filter(u -> u.getBenutzer() == null || angemeldet.darfSehen(u.getBenutzer()))
                 .toList());
     }
 

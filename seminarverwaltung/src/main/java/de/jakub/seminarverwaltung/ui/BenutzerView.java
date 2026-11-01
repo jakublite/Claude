@@ -1,5 +1,9 @@
 package de.jakub.seminarverwaltung.ui;
 
+import java.nio.charset.StandardCharsets;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.badge.Badge;
@@ -14,6 +18,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.PageTitle;
@@ -22,17 +27,21 @@ import com.vaadin.flow.router.Route;
 import de.jakub.seminarverwaltung.benutzer.Benutzer;
 import de.jakub.seminarverwaltung.benutzer.BenutzerRepository;
 import de.jakub.seminarverwaltung.benutzer.Rolle;
+import jakarta.annotation.security.RolesAllowed;
 
 @Route("benutzer")
 @PageTitle("Benutzer")
+@RolesAllowed("KURSLEITER")
 public class BenutzerView extends VerticalLayout {
 
     private final BenutzerRepository benutzerRepository;
+    private final PasswordEncoder passwordEncoder;
     private final Grid<Benutzer> grid = new Grid<>();
     private final TextField suche;
 
-    public BenutzerView(BenutzerRepository benutzerRepository) {
+    public BenutzerView(BenutzerRepository benutzerRepository, PasswordEncoder passwordEncoder) {
         this.benutzerRepository = benutzerRepository;
+        this.passwordEncoder = passwordEncoder;
         addClassName("seite");
         setSizeFull();
 
@@ -89,14 +98,25 @@ public class BenutzerView extends VerticalLayout {
         rolle.setLabel("Rolle");
         rolle.setItems(Rolle.values());
         rolle.setItemLabelGenerator(r -> r == Rolle.KURSLEITER ? "Kursleiter" : "Teilnehmer");
+        PasswordField passwort = new PasswordField("Neues Passwort");
+        passwort.setHelperText("leer = unverändert, ohne Passwort kein Login");
 
         BeanValidationBinder<Benutzer> binder = new BeanValidationBinder<>(Benutzer.class);
         binder.forField(vorname).bind("vorname");
         binder.forField(nachname).bind("nachname");
         binder.forField(email).bind("email");
         binder.forField(rolle).bind("rolle");
+        binder.forField(passwort)
+                // BCrypt verarbeitet höchstens 72 Byte
+                .withValidator(p -> p.isEmpty() || (p.length() >= 8 && p.getBytes(StandardCharsets.UTF_8).length <= 72),
+                        "8 bis 72 Zeichen")
+                .bind(b -> "", (b, p) -> {
+                    if (!p.isEmpty()) {
+                        b.setPasswortHash(passwordEncoder.encode(p));
+                    }
+                });
 
-        FormLayout formular = new FormLayout(vorname, nachname, email, rolle);
+        FormLayout formular = new FormLayout(vorname, nachname, email, rolle, passwort);
         formular.setResponsiveSteps(new ResponsiveStep("0", 1), new ResponsiveStep("480px", 2));
 
         String titel = benutzer.getId() == null ? "Neuer Benutzer" : "Benutzer bearbeiten";

@@ -16,10 +16,12 @@ import com.vaadin.flow.router.Route;
 import de.jakub.seminarverwaltung.nachricht.NachrichtenService;
 import de.jakub.seminarverwaltung.nachricht.Vorlage;
 import de.jakub.seminarverwaltung.nachricht.VorlageRepository;
+import jakarta.annotation.security.RolesAllowed;
 
 /** E-Mail-Vorlagen bearbeiten. Änderungen gelten für alle künftigen E-Mails. */
 @Route("vorlagen")
 @PageTitle("E-Mail-Vorlagen")
+@RolesAllowed("KURSLEITER")
 public class VorlagenView extends VerticalLayout {
 
     private final NachrichtenService nachrichtenService;

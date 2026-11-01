@@ -24,6 +24,20 @@ html {
   margin: 0;
 }
 
+.konto {
+  display: flex;
+  align-items: center;
+  gap: var(--vaadin-gap-s);
+  margin-inline-start: auto;
+  padding-inline-end: var(--vaadin-padding-s);
+}
+
+@media (max-width: 600px) {
+  .konto .gedimmt {
+    display: none;
+  }
+}
+
 /* Seitenrahmen */
 .seite {
   padding: var(--vaadin-padding-l);

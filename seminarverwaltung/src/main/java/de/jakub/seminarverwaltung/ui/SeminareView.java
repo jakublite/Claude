@@ -23,12 +23,16 @@ import de.jakub.seminarverwaltung.seminar.PraesenzSeminar;
 import de.jakub.seminarverwaltung.seminar.Seminar;
 import de.jakub.seminarverwaltung.seminar.SeminarRepository;
 import de.jakub.seminarverwaltung.seminar.SeminarService;
+import de.jakub.seminarverwaltung.sicherheit.Angemeldet;
 import de.jakub.seminarverwaltung.unterlage.SchulungsunterlageRepository;
 import de.jakub.seminarverwaltung.wetter.WetterService;
 import de.jakub.seminarverwaltung.zertifikat.ZertifikatRepository;
+import jakarta.annotation.security.PermitAll;
 
+/** Alle sehen die Liste, nur Kursleiter legen an, bearbeiten und löschen. */
 @Route("seminare")
 @PageTitle("Seminare")
+@PermitAll
 public class SeminareView extends VerticalLayout {
 
     private final SeminarRepository seminarRepository;
@@ -37,26 +41,31 @@ public class SeminareView extends VerticalLayout {
     private final WetterService wetterService;
     private final ZertifikatRepository zertifikatRepository;
     private final SchulungsunterlageRepository unterlageRepository;
+    private final Angemeldet angemeldet;
 
     private final Grid<Seminar> grid = new Grid<>();
     private final TextField suche;
 
     public SeminareView(SeminarRepository seminarRepository, BenutzerRepository benutzerRepository,
             SeminarService seminarService, WetterService wetterService, ZertifikatRepository zertifikatRepository,
-            SchulungsunterlageRepository unterlageRepository) {
+            SchulungsunterlageRepository unterlageRepository, Angemeldet angemeldet) {
         this.seminarRepository = seminarRepository;
         this.benutzerRepository = benutzerRepository;
         this.seminarService = seminarService;
         this.wetterService = wetterService;
         this.zertifikatRepository = zertifikatRepository;
         this.unterlageRepository = unterlageRepository;
+        this.angemeldet = angemeldet;
         addClassName("seite");
         setSizeFull();
 
         suche = UiHilfe.suchfeld("Titel suchen …", t -> aktualisiere());
-        HorizontalLayout toolbar = new HorizontalLayout(suche,
-                UiHilfe.primaer("Online-Seminar", VaadinIcon.LAPTOP, () -> bearbeite(mitStandardwerten(new OnlineSeminar()))),
-                UiHilfe.primaer("Präsenz-Seminar", VaadinIcon.BUILDING, () -> bearbeite(mitStandardwerten(new PraesenzSeminar()))));
+        HorizontalLayout toolbar = new HorizontalLayout(suche);
+        if (angemeldet.istKursleiter()) {
+            toolbar.add(
+                    UiHilfe.primaer("Online-Seminar", VaadinIcon.LAPTOP, () -> bearbeite(mitStandardwerten(new OnlineSeminar()))),
+                    UiHilfe.primaer("Präsenz-Seminar", VaadinIcon.BUILDING, () -> bearbeite(mitStandardwerten(new PraesenzSeminar()))));
+        }
         toolbar.addClassName("toolbar");
 
         grid.addComponentColumn(SeminareView::titelZelle).setHeader("Seminar")
@@ -75,8 +84,10 @@ public class SeminareView extends VerticalLayout {
         grid.addColumn(s -> UiHilfe.betrag(s.getPreis())).setHeader("Preis")
                 .setComparator(Comparator.comparing(Seminar::getPreis, Comparator.nullsFirst(Comparator.naturalOrder())))
                 .setAutoWidth(true);
-        grid.addComponentColumn(s -> UiHilfe.zeilenAktionen(() -> bearbeite(s), () -> loesche(s)))
-                .setWidth("110px").setFlexGrow(0);
+        if (angemeldet.istKursleiter()) {
+            grid.addComponentColumn(s -> UiHilfe.zeilenAktionen(() -> bearbeite(s), () -> loesche(s)))
+                    .setWidth("110px").setFlexGrow(0);
+        }
         grid.addItemClickListener(e -> zeigeDetails(e.getItem()));
         grid.sort(GridSortOrder.asc(zeitraum).build());
         grid.setSizeFull();
@@ -157,6 +168,6 @@ public class SeminareView extends VerticalLayout {
 
     private void zeigeDetails(Seminar seminar) {
         new SeminarDetailDialog(seminar, this, seminarService, benutzerRepository, wetterService,
-                zertifikatRepository, unterlageRepository).open();
+                zertifikatRepository, unterlageRepository, angemeldet).open();
     }
 }

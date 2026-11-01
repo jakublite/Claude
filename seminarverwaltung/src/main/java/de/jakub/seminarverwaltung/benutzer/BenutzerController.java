@@ -1,5 +1,7 @@
 package de.jakub.seminarverwaltung.benutzer;
 
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,12 +47,15 @@ public class BenutzerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(benutzerRepository.save(benutzer));
     }
 
+    /** Das Passwort bleibt erhalten, es kommt nicht über JSON. */
     @PutMapping("/{id}")
     public ResponseEntity<Object> aendern(@PathVariable Long id, @Valid @RequestBody Benutzer benutzer) {
-        if (!benutzerRepository.existsById(id)) {
+        Optional<Benutzer> bisher = benutzerRepository.findById(id);
+        if (bisher.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         benutzer.setId(id);
+        benutzer.setPasswortHash(bisher.get().getPasswortHash());
         return ResponseEntity.ok(benutzerRepository.save(benutzer));
     }
 

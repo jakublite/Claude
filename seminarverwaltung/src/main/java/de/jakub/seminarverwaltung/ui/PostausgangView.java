@@ -14,10 +14,12 @@ import com.vaadin.flow.router.Route;
 
 import de.jakub.seminarverwaltung.nachricht.Nachricht;
 import de.jakub.seminarverwaltung.nachricht.NachrichtRepository;
+import jakarta.annotation.security.RolesAllowed;
 
 /** Zeigt die simulierten E-Mails, ein Klick auf eine Zeile öffnet den Text. */
 @Route("postausgang")
 @PageTitle("Postausgang")
+@RolesAllowed("KURSLEITER")
 public class PostausgangView extends VerticalLayout {
 
     private static final DateTimeFormatter ZEIT = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");

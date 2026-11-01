@@ -1,5 +1,7 @@
 package de.jakub.seminarverwaltung.benutzer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -35,4 +37,8 @@ public class Benutzer {
     @NotNull
     @Enumerated(EnumType.STRING)
     private Rolle rolle;
+
+    /** BCrypt-Hash. Weder im JSON sichtbar noch per JSON setzbar. */
+    @JsonIgnore
+    private String passwortHash;
 }

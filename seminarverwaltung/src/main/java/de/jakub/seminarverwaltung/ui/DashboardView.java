@@ -19,20 +19,24 @@ import com.vaadin.flow.router.Route;
 import de.jakub.seminarverwaltung.benutzer.BenutzerRepository;
 import de.jakub.seminarverwaltung.seminar.Seminar;
 import de.jakub.seminarverwaltung.seminar.SeminarRepository;
+import de.jakub.seminarverwaltung.sicherheit.Angemeldet;
 import de.jakub.seminarverwaltung.unterlage.Schulungsunterlage;
 import de.jakub.seminarverwaltung.unterlage.SchulungsunterlageRepository;
+import jakarta.annotation.security.PermitAll;
 
 @Route("")
 @PageTitle("Übersicht")
+@PermitAll
 public class DashboardView extends VerticalLayout {
 
     public DashboardView(SeminarRepository seminarRepository, BenutzerRepository benutzerRepository,
-            SchulungsunterlageRepository unterlageRepository) {
+            SchulungsunterlageRepository unterlageRepository, Angemeldet angemeldet) {
         addClassName("seite");
 
         List<Seminar> seminare = seminarRepository.findAll();
         List<Schulungsunterlage> ueberfaellig = unterlageRepository.findAll().stream()
                 .filter(Schulungsunterlage::isUeberfaellig)
+                .filter(u -> angemeldet.darfSehen(u.getBenutzer()))
                 .toList();
         int belegt = seminare.stream().mapToInt(Seminar::getAnzahlTeilnehmer).sum();
         int plaetze = seminare.stream().mapToInt(Seminar::getMaxTeilnehmer).sum();
@@ -41,9 +45,11 @@ public class DashboardView extends VerticalLayout {
         Div kennzahlen = new Div(
                 kennzahl("Seminare", String.valueOf(seminare.size()), VaadinIcon.CALENDAR),
                 kennzahl("Belegte Plätze", belegt + " / " + plaetze, VaadinIcon.USER_CHECK),
-                kennzahl("Auf Warteliste", String.valueOf(wartend), VaadinIcon.CLOCK),
-                kennzahl("Benutzer", String.valueOf(benutzerRepository.count()), VaadinIcon.USERS),
-                kennzahl("Überfällige Ausleihen", String.valueOf(ueberfaellig.size()), VaadinIcon.WARNING));
+                kennzahl("Auf Warteliste", String.valueOf(wartend), VaadinIcon.CLOCK));
+        if (angemeldet.istKursleiter()) {
+            kennzahlen.add(kennzahl("Benutzer", String.valueOf(benutzerRepository.count()), VaadinIcon.USERS));
+        }
+        kennzahlen.add(kennzahl("Überfällige Ausleihen", String.valueOf(ueberfaellig.size()), VaadinIcon.WARNING));
         kennzahlen.addClassName("kennzahlen");
 
         Div spalten = new Div(naechsteSeminare(seminare), ueberfaelligeAusleihen(ueberfaellig));
