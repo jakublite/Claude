@@ -1,0 +1,5 @@
+titel;art;bezugsart;verfuegbarBis;gebuehr;bezahlt;seminarTitel;benutzerEmail
+Java ist auch eine Insel;BUCH;LEIHEN;2026-10-15;5.00;false;Java Grundlagen;lena.hofmann@example.com
+Java Kursskript;PDF;KAUFEN;;19.90;true;Java Grundlagen;murat.yilmaz@example.com
+SQL Spickzettel;PDF;KAUFEN;;4.90;false;SQL für Einsteiger;lena.hofmann@example.com
+Clean Code;BUCH;LEIHEN;2027-02-01;5.00;true;Clean Code Workshop;

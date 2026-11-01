@@ -1,0 +1,54 @@
+{
+  "benutzer": [
+    { "vorname": "Clara", "nachname": "Neumann", "email": "clara.neumann@example.com", "rolle": "KURSLEITER" },
+    { "vorname": "Jonas", "nachname": "Fischer", "email": "jonas.fischer@example.com", "rolle": "TEILNEHMER" }
+  ],
+  "seminare": [
+    {
+      "typ": "ONLINE",
+      "titel": "Kubernetes Basics",
+      "beschreibung": "Pods, Deployments und Helm im Überblick",
+      "startDatum": "2027-02-08",
+      "endDatum": "2027-02-09",
+      "maxTeilnehmer": 15,
+      "preis": 480.00,
+      "kursleiterEmail": "clara.neumann@example.com",
+      "teilnehmerEmails": ["jonas.fischer@example.com"],
+      "meetingLink": "https://meet.example.com/kubernetes",
+      "plattform": "Webex"
+    },
+    {
+      "typ": "PRAESENZ",
+      "titel": "Jenkins Pipelines",
+      "beschreibung": "Declarative Pipelines und Shared Libraries",
+      "startDatum": "2027-03-02",
+      "endDatum": "2027-03-03",
+      "maxTeilnehmer": 6,
+      "preis": 550.00,
+      "kursleiterEmail": "clara.neumann@example.com",
+      "teilnehmerEmails": [],
+      "ort": "Berlin",
+      "raum": "Lab 1"
+    }
+  ],
+  "zertifikate": [
+    {
+      "seminarTitel": "Kubernetes Basics",
+      "teilnehmerEmail": "jonas.fischer@example.com",
+      "niveau": "B",
+      "ausstellungsdatum": "2027-02-09"
+    }
+  ],
+  "unterlagen": [
+    {
+      "titel": "Kubernetes in Action",
+      "art": "EBOOK",
+      "bezugsart": "LEIHEN",
+      "verfuegbarBis": "2027-03-01",
+      "gebuehr": 3.50,
+      "bezahlt": false,
+      "seminarTitel": "Kubernetes Basics",
+      "benutzerEmail": "jonas.fischer@example.com"
+    }
+  ]
+}

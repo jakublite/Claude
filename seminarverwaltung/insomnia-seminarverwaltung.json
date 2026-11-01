@@ -1,0 +1,1385 @@
+{
+    "_type":  "export",
+    "__export_format":  4,
+    "__export_date":  "2026-11-01T00:00:00.000Z",
+    "__export_source":  "claude-code",
+    "resources":  [
+                      {
+                          "_id":  "wrk_seminarverwaltung",
+                          "_type":  "workspace",
+                          "parentId":  null,
+                          "name":  "Seminarverwaltung",
+                          "description":  "REST-Tests gegen die lokale App. Die Daten liegen im Speicher und sind nach einem Neustart wieder im Ausgangszustand.",
+                          "scope":  "collection"
+                      },
+                      {
+                          "_id":  "env_seminarverwaltung",
+                          "_type":  "environment",
+                          "parentId":  "wrk_seminarverwaltung",
+                          "name":  "Base Environment",
+                          "data":  {
+                                       "base_url":  "http://localhost:8080"
+                                   }
+                      },
+                      {
+                          "_id":  "fld_1",
+                          "_type":  "request_group",
+                          "parentId":  "wrk_seminarverwaltung",
+                          "name":  "Seminare",
+                          "metaSortKey":  1000
+                      },
+                      {
+                          "_id":  "req_1",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Alle Seminare [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  1
+                      },
+                      {
+                          "_id":  "req_2",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Suche nach Titel [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare?titel=java",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  2
+                      },
+                      {
+                          "_id":  "req_3",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Präsenz-Seminar laden [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare/7",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  3
+                      },
+                      {
+                          "_id":  "req_4",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Online-Seminar anlegen [201]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/seminare",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"typ\":  \"ONLINE\",\r\n    \"titel\":  \"Neues Online-Seminar\",\r\n    \"beschreibung\":  \"Aus Insomnia angelegt\",\r\n    \"startDatum\":  \"2027-05-03\",\r\n    \"endDatum\":  \"2027-05-04\",\r\n    \"maxTeilnehmer\":  10,\r\n    \"preis\":  299.00,\r\n    \"kursleiter\":  {\r\n                       \"id\":  1\r\n                   },\r\n    \"meetingLink\":  \"https://meet.example.com/neu\",\r\n    \"plattform\":  \"Teams\"\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  4
+                      },
+                      {
+                          "_id":  "req_5",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Präsenz-Seminar anlegen [201]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/seminare",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"typ\":  \"PRAESENZ\",\r\n    \"titel\":  \"Neues Präsenz-Seminar\",\r\n    \"startDatum\":  \"2027-06-07\",\r\n    \"endDatum\":  \"2027-06-08\",\r\n    \"maxTeilnehmer\":  8,\r\n    \"preis\":  450.00,\r\n    \"kursleiter\":  {\r\n                       \"id\":  2\r\n                   },\r\n    \"ort\":  \"Augsburg\",\r\n    \"raum\":  \"Raum 3.01\"\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  5
+                      },
+                      {
+                          "_id":  "req_6",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Seminar ändern (Teilnehmer bleiben) [200]",
+                          "method":  "PUT",
+                          "url":  "{{ _.base_url }}/api/seminare/6",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"typ\":  \"ONLINE\",\r\n    \"titel\":  \"Java Grundlagen\",\r\n    \"beschreibung\":  \"Geänderte Beschreibung\",\r\n    \"startDatum\":  \"2026-11-16\",\r\n    \"endDatum\":  \"2026-11-18\",\r\n    \"maxTeilnehmer\":  14,\r\n    \"preis\":  450.00,\r\n    \"kursleiter\":  {\r\n                       \"id\":  1\r\n                   },\r\n    \"meetingLink\":  \"https://meet.example.com/java-grundlagen\",\r\n    \"plattform\":  \"Teams\"\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  6
+                      },
+                      {
+                          "_id":  "req_7",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Seminar löschen [204]",
+                          "method":  "DELETE",
+                          "url":  "{{ _.base_url }}/api/seminare/13",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  7
+                      },
+                      {
+                          "_id":  "req_8",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Fehler: Seminartyp wechseln [400]",
+                          "method":  "PUT",
+                          "url":  "{{ _.base_url }}/api/seminare/6",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"typ\":  \"PRAESENZ\",\r\n    \"titel\":  \"Java Grundlagen\",\r\n    \"startDatum\":  \"2026-11-16\",\r\n    \"endDatum\":  \"2026-11-18\",\r\n    \"maxTeilnehmer\":  12,\r\n    \"kursleiter\":  {\r\n                       \"id\":  1\r\n                   },\r\n    \"ort\":  \"Augsburg\"\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  8
+                      },
+                      {
+                          "_id":  "req_9",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Fehler: Ende vor Start [400]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/seminare",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"typ\":  \"ONLINE\",\r\n    \"titel\":  \"Falscher Zeitraum\",\r\n    \"startDatum\":  \"2027-05-04\",\r\n    \"endDatum\":  \"2027-05-03\",\r\n    \"maxTeilnehmer\":  10,\r\n    \"kursleiter\":  {\r\n                       \"id\":  1\r\n                   },\r\n    \"meetingLink\":  \"https://meet.example.com/falsch\"\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  9
+                      },
+                      {
+                          "_id":  "req_10",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Fehler: Seminar mit Unterlage löschen [409]",
+                          "method":  "DELETE",
+                          "url":  "{{ _.base_url }}/api/seminare/10",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  10
+                      },
+                      {
+                          "_id":  "req_11",
+                          "_type":  "request",
+                          "parentId":  "fld_1",
+                          "name":  "Fehler: Seminar nicht gefunden [404]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare/9999",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  11
+                      },
+                      {
+                          "_id":  "fld_2",
+                          "_type":  "request_group",
+                          "parentId":  "wrk_seminarverwaltung",
+                          "name":  "Anmeldung",
+                          "metaSortKey":  2000
+                      },
+                      {
+                          "_id":  "req_12",
+                          "_type":  "request",
+                          "parentId":  "fld_2",
+                          "name":  "Lena für Clean Code anmelden [200]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/seminare/10/teilnehmer/5",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  12
+                      },
+                      {
+                          "_id":  "req_13",
+                          "_type":  "request",
+                          "parentId":  "fld_2",
+                          "name":  "Fehler: schon angemeldet [409]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/seminare/10/teilnehmer/5",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  13
+                      },
+                      {
+                          "_id":  "req_14",
+                          "_type":  "request",
+                          "parentId":  "fld_2",
+                          "name":  "Lena wieder abmelden [200]",
+                          "method":  "DELETE",
+                          "url":  "{{ _.base_url }}/api/seminare/10/teilnehmer/5",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  14
+                      },
+                      {
+                          "_id":  "req_15",
+                          "_type":  "request",
+                          "parentId":  "fld_2",
+                          "name":  "Fehler: nicht angemeldet [404]",
+                          "method":  "DELETE",
+                          "url":  "{{ _.base_url }}/api/seminare/10/teilnehmer/5",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  15
+                      },
+                      {
+                          "_id":  "req_16",
+                          "_type":  "request",
+                          "parentId":  "fld_2",
+                          "name":  "Fehler: Seminar ausgebucht [409]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/seminare/8/teilnehmer/10",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  16
+                      },
+                      {
+                          "_id":  "req_17",
+                          "_type":  "request",
+                          "parentId":  "fld_2",
+                          "name":  "Fehler: Kursleiter meldet sich selbst an [409]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/seminare/10/teilnehmer/2",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  17
+                      },
+                      {
+                          "_id":  "fld_3",
+                          "_type":  "request_group",
+                          "parentId":  "wrk_seminarverwaltung",
+                          "name":  "Benutzer",
+                          "metaSortKey":  3000
+                      },
+                      {
+                          "_id":  "req_18",
+                          "_type":  "request",
+                          "parentId":  "fld_3",
+                          "name":  "Alle Benutzer [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/benutzer",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  18
+                      },
+                      {
+                          "_id":  "req_19",
+                          "_type":  "request",
+                          "parentId":  "fld_3",
+                          "name":  "Suche nach Nachname [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/benutzer?nachname=berger",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  19
+                      },
+                      {
+                          "_id":  "req_20",
+                          "_type":  "request",
+                          "parentId":  "fld_3",
+                          "name":  "Benutzer laden [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/benutzer/5",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  20
+                      },
+                      {
+                          "_id":  "req_21",
+                          "_type":  "request",
+                          "parentId":  "fld_3",
+                          "name":  "Benutzer anlegen [201]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/benutzer",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"vorname\":  \"Mia\",\r\n    \"nachname\":  \"Neu\",\r\n    \"email\":  \"mia.neu@example.com\",\r\n    \"rolle\":  \"TEILNEHMER\"\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  21
+                      },
+                      {
+                          "_id":  "req_22",
+                          "_type":  "request",
+                          "parentId":  "fld_3",
+                          "name":  "Benutzer ändern [200]",
+                          "method":  "PUT",
+                          "url":  "{{ _.base_url }}/api/benutzer/20",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"vorname\":  \"Piotr\",\r\n    \"nachname\":  \"Nowak-Lang\",\r\n    \"email\":  \"piotr.nowak@example.com\",\r\n    \"rolle\":  \"TEILNEHMER\"\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  22
+                      },
+                      {
+                          "_id":  "req_23",
+                          "_type":  "request",
+                          "parentId":  "fld_3",
+                          "name":  "Fehler: E-Mail doppelt [409]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/benutzer",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"vorname\":  \"Anna\",\r\n    \"nachname\":  \"Doppelt\",\r\n    \"email\":  \"anna.berger@example.com\",\r\n    \"rolle\":  \"TEILNEHMER\"\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  23
+                      },
+                      {
+                          "_id":  "req_24",
+                          "_type":  "request",
+                          "parentId":  "fld_3",
+                          "name":  "Fehler: E-Mail ungültig [400]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/benutzer",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"vorname\":  \"Max\",\r\n    \"nachname\":  \"Falsch\",\r\n    \"email\":  \"keine-email\",\r\n    \"rolle\":  \"TEILNEHMER\"\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  24
+                      },
+                      {
+                          "_id":  "req_25",
+                          "_type":  "request",
+                          "parentId":  "fld_3",
+                          "name":  "Fehler: Kursleiter löschen [409]",
+                          "method":  "DELETE",
+                          "url":  "{{ _.base_url }}/api/benutzer/1",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  25
+                      },
+                      {
+                          "_id":  "fld_4",
+                          "_type":  "request_group",
+                          "parentId":  "wrk_seminarverwaltung",
+                          "name":  "Zertifikate",
+                          "metaSortKey":  4000
+                      },
+                      {
+                          "_id":  "req_26",
+                          "_type":  "request",
+                          "parentId":  "fld_4",
+                          "name":  "Alle Zertifikate [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/zertifikate",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  26
+                      },
+                      {
+                          "_id":  "req_27",
+                          "_type":  "request",
+                          "parentId":  "fld_4",
+                          "name":  "Zertifikate eines Seminars [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/zertifikate?seminarId=2",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  27
+                      },
+                      {
+                          "_id":  "req_28",
+                          "_type":  "request",
+                          "parentId":  "fld_4",
+                          "name":  "Zertifikat laden [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/zertifikate/1",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  28
+                      },
+                      {
+                          "_id":  "req_29",
+                          "_type":  "request",
+                          "parentId":  "fld_4",
+                          "name":  "Zertifikat anlegen [201]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/zertifikate",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"seminar\":  {\r\n                    \"id\":  5,\r\n                    \"typ\":  \"ONLINE\"\r\n                },\r\n    \"teilnehmer\":  {\r\n                       \"id\":  9\r\n                   },\r\n    \"niveau\":  \"B\",\r\n    \"ausstellungsdatum\":  \"2026-11-03\",\r\n    \"gueltigBis\":  \"2029-11-03\"\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  29
+                      },
+                      {
+                          "_id":  "req_30",
+                          "_type":  "request",
+                          "parentId":  "fld_4",
+                          "name":  "Zertifikat ändern [200]",
+                          "method":  "PUT",
+                          "url":  "{{ _.base_url }}/api/zertifikate/3",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"seminar\":  {\r\n                    \"id\":  1,\r\n                    \"typ\":  \"PRAESENZ\"\r\n                },\r\n    \"teilnehmer\":  {\r\n                       \"id\":  11\r\n                   },\r\n    \"niveau\":  \"A\",\r\n    \"ausstellungsdatum\":  \"2023-03-14\"\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  30
+                      },
+                      {
+                          "_id":  "req_31",
+                          "_type":  "request",
+                          "parentId":  "fld_4",
+                          "name":  "Zertifikat löschen [204]",
+                          "method":  "DELETE",
+                          "url":  "{{ _.base_url }}/api/zertifikate/15",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  31
+                      },
+                      {
+                          "_id":  "req_32",
+                          "_type":  "request",
+                          "parentId":  "fld_4",
+                          "name":  "Fehler: Pflichtfelder fehlen [400]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/zertifikate",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"niveau\":  \"A\"\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  32
+                      },
+                      {
+                          "_id":  "fld_5",
+                          "_type":  "request_group",
+                          "parentId":  "wrk_seminarverwaltung",
+                          "name":  "Unterlagen",
+                          "metaSortKey":  5000
+                      },
+                      {
+                          "_id":  "req_33",
+                          "_type":  "request",
+                          "parentId":  "fld_5",
+                          "name":  "Alle Unterlagen [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/unterlagen",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  33
+                      },
+                      {
+                          "_id":  "req_34",
+                          "_type":  "request",
+                          "parentId":  "fld_5",
+                          "name":  "Suche nach Titel (überfällig) [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/unterlagen?titel=insel",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  34
+                      },
+                      {
+                          "_id":  "req_35",
+                          "_type":  "request",
+                          "parentId":  "fld_5",
+                          "name":  "Unterlage kaufen [201]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/unterlagen",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"titel\":  \"Neues Skript\",\r\n    \"art\":  \"PDF\",\r\n    \"bezugsart\":  \"KAUFEN\",\r\n    \"gebuehr\":  9.90,\r\n    \"bezahlt\":  false,\r\n    \"seminar\":  {\r\n                    \"id\":  6,\r\n                    \"typ\":  \"ONLINE\"\r\n                },\r\n    \"benutzer\":  {\r\n                     \"id\":  5\r\n                 }\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  35
+                      },
+                      {
+                          "_id":  "req_36",
+                          "_type":  "request",
+                          "parentId":  "fld_5",
+                          "name":  "Unterlage leihen [201]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/unterlagen",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"titel\":  \"Neues Leihbuch\",\r\n    \"art\":  \"BUCH\",\r\n    \"bezugsart\":  \"LEIHEN\",\r\n    \"verfuegbarBis\":  \"2027-01-31\",\r\n    \"gebuehr\":  5.00,\r\n    \"bezahlt\":  false,\r\n    \"seminar\":  {\r\n                    \"id\":  6,\r\n                    \"typ\":  \"ONLINE\"\r\n                },\r\n    \"benutzer\":  {\r\n                     \"id\":  6\r\n                 }\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  36
+                      },
+                      {
+                          "_id":  "req_37",
+                          "_type":  "request",
+                          "parentId":  "fld_5",
+                          "name":  "Unterlage ändern (Leihe zurückdatieren) [200]",
+                          "method":  "PUT",
+                          "url":  "{{ _.base_url }}/api/unterlagen/6",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"titel\":  \"Clean Code\",\r\n    \"art\":  \"BUCH\",\r\n    \"bezugsart\":  \"LEIHEN\",\r\n    \"verfuegbarBis\":  \"2026-10-01\",\r\n    \"gebuehr\":  5.00,\r\n    \"bezahlt\":  true,\r\n    \"seminar\":  {\r\n                    \"id\":  10,\r\n                    \"typ\":  \"PRAESENZ\"\r\n                }\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  37
+                      },
+                      {
+                          "_id":  "req_38",
+                          "_type":  "request",
+                          "parentId":  "fld_5",
+                          "name":  "Unterlage löschen [204]",
+                          "method":  "DELETE",
+                          "url":  "{{ _.base_url }}/api/unterlagen/15",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  38
+                      },
+                      {
+                          "_id":  "req_39",
+                          "_type":  "request",
+                          "parentId":  "fld_5",
+                          "name":  "Fehler: Leihen ohne verfuegbarBis [400]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/unterlagen",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\r\n    \"titel\":  \"Testbuch\",\r\n    \"art\":  \"BUCH\",\r\n    \"bezugsart\":  \"LEIHEN\",\r\n    \"gebuehr\":  5.00\r\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  39
+                      },
+                      {
+                          "_id":  "fld_6",
+                          "_type":  "request_group",
+                          "parentId":  "wrk_seminarverwaltung",
+                          "name":  "Wetter",
+                          "metaSortKey":  6000
+                      },
+                      {
+                          "_id":  "req_40",
+                          "_type":  "request",
+                          "parentId":  "fld_6",
+                          "name":  "Wetter als JSON (Augsburg) [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare/7/wetter",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  40
+                      },
+                      {
+                          "_id":  "req_41",
+                          "_type":  "request",
+                          "parentId":  "fld_6",
+                          "name":  "Wetter als HTML (Augsburg) [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare/7/wetter/html",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  41
+                      },
+                      {
+                          "_id":  "req_42",
+                          "_type":  "request",
+                          "parentId":  "fld_6",
+                          "name":  "Fehler: Online-Seminar hat kein Wetter [404]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare/6/wetter",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  42
+                      },
+                      {
+                          "_id":  "req_43",
+                          "_type":  "request",
+                          "parentId":  "fld_6",
+                          "name":  "Fehler: Ort unbekannt [404]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare/14/wetter",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  43
+                      },
+                      {
+                          "_id":  "fld_7",
+                          "_type":  "request_group",
+                          "parentId":  "wrk_seminarverwaltung",
+                          "name":  "Import",
+                          "metaSortKey":  7000
+                      },
+                      {
+                          "_id":  "req_44",
+                          "_type":  "request",
+                          "parentId":  "fld_7",
+                          "name":  "JSON-Import (schnittstelle.json) [200]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/import/json",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\n  \"benutzer\": [\n    { \"vorname\": \"Clara\", \"nachname\": \"Neumann\", \"email\": \"clara.neumann@example.com\", \"rolle\": \"KURSLEITER\" },\n    { \"vorname\": \"Jonas\", \"nachname\": \"Fischer\", \"email\": \"jonas.fischer@example.com\", \"rolle\": \"TEILNEHMER\" }\n  ],\n  \"seminare\": [\n    {\n      \"typ\": \"ONLINE\",\n      \"titel\": \"Kubernetes Basics\",\n      \"beschreibung\": \"Pods, Deployments und Helm im Überblick\",\n      \"startDatum\": \"2027-02-08\",\n      \"endDatum\": \"2027-02-09\",\n      \"maxTeilnehmer\": 15,\n      \"preis\": 480.00,\n      \"kursleiterEmail\": \"clara.neumann@example.com\",\n      \"teilnehmerEmails\": [\"jonas.fischer@example.com\"],\n      \"meetingLink\": \"https://meet.example.com/kubernetes\",\n      \"plattform\": \"Webex\"\n    },\n    {\n      \"typ\": \"PRAESENZ\",\n      \"titel\": \"Jenkins Pipelines\",\n      \"beschreibung\": \"Declarative Pipelines und Shared Libraries\",\n      \"startDatum\": \"2027-03-02\",\n      \"endDatum\": \"2027-03-03\",\n      \"maxTeilnehmer\": 6,\n      \"preis\": 550.00,\n      \"kursleiterEmail\": \"clara.neumann@example.com\",\n      \"teilnehmerEmails\": [],\n      \"ort\": \"Berlin\",\n      \"raum\": \"Lab 1\"\n    }\n  ],\n  \"zertifikate\": [\n    {\n      \"seminarTitel\": \"Kubernetes Basics\",\n      \"teilnehmerEmail\": \"jonas.fischer@example.com\",\n      \"niveau\": \"B\",\n      \"ausstellungsdatum\": \"2027-02-09\"\n    }\n  ],\n  \"unterlagen\": [\n    {\n      \"titel\": \"Kubernetes in Action\",\n      \"art\": \"EBOOK\",\n      \"bezugsart\": \"LEIHEN\",\n      \"verfuegbarBis\": \"2027-03-01\",\n      \"gebuehr\": 3.50,\n      \"bezahlt\": false,\n      \"seminarTitel\": \"Kubernetes Basics\",\n      \"benutzerEmail\": \"jonas.fischer@example.com\"\n    }\n  ]\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  44
+                      },
+                      {
+                          "_id":  "req_45",
+                          "_type":  "request",
+                          "parentId":  "fld_7",
+                          "name":  "Fehler: gleicher Import noch einmal [409]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/import/json",
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\n  \"benutzer\": [\n    { \"vorname\": \"Clara\", \"nachname\": \"Neumann\", \"email\": \"clara.neumann@example.com\", \"rolle\": \"KURSLEITER\" },\n    { \"vorname\": \"Jonas\", \"nachname\": \"Fischer\", \"email\": \"jonas.fischer@example.com\", \"rolle\": \"TEILNEHMER\" }\n  ],\n  \"seminare\": [\n    {\n      \"typ\": \"ONLINE\",\n      \"titel\": \"Kubernetes Basics\",\n      \"beschreibung\": \"Pods, Deployments und Helm im Überblick\",\n      \"startDatum\": \"2027-02-08\",\n      \"endDatum\": \"2027-02-09\",\n      \"maxTeilnehmer\": 15,\n      \"preis\": 480.00,\n      \"kursleiterEmail\": \"clara.neumann@example.com\",\n      \"teilnehmerEmails\": [\"jonas.fischer@example.com\"],\n      \"meetingLink\": \"https://meet.example.com/kubernetes\",\n      \"plattform\": \"Webex\"\n    },\n    {\n      \"typ\": \"PRAESENZ\",\n      \"titel\": \"Jenkins Pipelines\",\n      \"beschreibung\": \"Declarative Pipelines und Shared Libraries\",\n      \"startDatum\": \"2027-03-02\",\n      \"endDatum\": \"2027-03-03\",\n      \"maxTeilnehmer\": 6,\n      \"preis\": 550.00,\n      \"kursleiterEmail\": \"clara.neumann@example.com\",\n      \"teilnehmerEmails\": [],\n      \"ort\": \"Berlin\",\n      \"raum\": \"Lab 1\"\n    }\n  ],\n  \"zertifikate\": [\n    {\n      \"seminarTitel\": \"Kubernetes Basics\",\n      \"teilnehmerEmail\": \"jonas.fischer@example.com\",\n      \"niveau\": \"B\",\n      \"ausstellungsdatum\": \"2027-02-09\"\n    }\n  ],\n  \"unterlagen\": [\n    {\n      \"titel\": \"Kubernetes in Action\",\n      \"art\": \"EBOOK\",\n      \"bezugsart\": \"LEIHEN\",\n      \"verfuegbarBis\": \"2027-03-01\",\n      \"gebuehr\": 3.50,\n      \"bezahlt\": false,\n      \"seminarTitel\": \"Kubernetes Basics\",\n      \"benutzerEmail\": \"jonas.fischer@example.com\"\n    }\n  ]\n}"
+                                   },
+                          "headers":  [
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  45
+                      },
+                      {
+                          "_id":  "fld_8",
+                          "_type":  "request_group",
+                          "parentId":  "wrk_seminarverwaltung",
+                          "name":  "Warteliste",
+                          "metaSortKey":  8000
+                      },
+                      {
+                          "_id":  "req_46",
+                          "_type":  "request",
+                          "parentId":  "fld_8",
+                          "name":  "Jan auf die Warteliste setzen [200]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/seminare/8/warteliste/10",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  46
+                      },
+                      {
+                          "_id":  "req_47",
+                          "_type":  "request",
+                          "parentId":  "fld_8",
+                          "name":  "Fehler: schon auf der Warteliste [409]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/seminare/8/warteliste/10",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  47
+                      },
+                      {
+                          "_id":  "req_48",
+                          "_type":  "request",
+                          "parentId":  "fld_8",
+                          "name":  "Fehler: Seminar hat noch Plätze [409]",
+                          "method":  "POST",
+                          "url":  "{{ _.base_url }}/api/seminare/10/warteliste/10",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  48
+                      },
+                      {
+                          "_id":  "req_49",
+                          "_type":  "request",
+                          "parentId":  "fld_8",
+                          "name":  "Jan von der Warteliste nehmen [200]",
+                          "method":  "DELETE",
+                          "url":  "{{ _.base_url }}/api/seminare/8/warteliste/10",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  49
+                      },
+                      {
+                          "_id":  "req_50",
+                          "_type":  "request",
+                          "parentId":  "fld_8",
+                          "name":  "Fehler: steht nicht auf der Warteliste [404]",
+                          "method":  "DELETE",
+                          "url":  "{{ _.base_url }}/api/seminare/8/warteliste/10",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  50
+                      },
+                      {
+                          "_id":  "req_51",
+                          "_type":  "request",
+                          "parentId":  "fld_8",
+                          "name":  "Sophie abmelden, Lena rückt nach [200]",
+                          "method":  "DELETE",
+                          "url":  "{{ _.base_url }}/api/seminare/8/teilnehmer/7",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  51
+                      },
+                      {
+                          "_id":  "req_52",
+                          "_type":  "request",
+                          "parentId":  "fld_8",
+                          "name":  "Seminar prüfen: Lena dabei, Murat wartet [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare/8",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  52
+                      },
+                      {
+                          "_id":  "fld_9",
+                          "_type":  "request_group",
+                          "parentId":  "wrk_seminarverwaltung",
+                          "name":  "Postausgang",
+                          "metaSortKey":  9000
+                      },
+                      {
+                          "_id":  "req_53",
+                          "_type":  "request",
+                          "parentId":  "fld_9",
+                          "name":  "Alle E-Mails [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/nachrichten",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  53
+                      },
+                      {
+                          "_id":  "req_54",
+                          "_type":  "request",
+                          "parentId":  "fld_9",
+                          "name":  "E-Mails von Lena [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/nachrichten?empfaenger=lena",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  54
+                      },
+                      {
+                          "_id":  "fld_10",
+                          "_type":  "request_group",
+                          "parentId":  "wrk_seminarverwaltung",
+                          "name":  "Dokumente",
+                          "metaSortKey":  10000
+                      },
+                      {
+                          "_id":  "req_55",
+                          "_type":  "request",
+                          "parentId":  "fld_10",
+                          "name":  "Teilnehmerliste als CSV [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare/8/teilnehmerliste.csv",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  55
+                      },
+                      {
+                          "_id":  "req_56",
+                          "_type":  "request",
+                          "parentId":  "fld_10",
+                          "name":  "Fehler: CSV für unbekanntes Seminar [404]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/seminare/9999/teilnehmerliste.csv",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  56
+                      },
+                      {
+                          "_id":  "req_57",
+                          "_type":  "request",
+                          "parentId":  "fld_10",
+                          "name":  "Zertifikat als HTML zum Drucken [200]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/zertifikate/1/dokument",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  57
+                      },
+                      {
+                          "_id":  "req_58",
+                          "_type":  "request",
+                          "parentId":  "fld_10",
+                          "name":  "Fehler: unbekanntes Zertifikat [404]",
+                          "method":  "GET",
+                          "url":  "{{ _.base_url }}/api/zertifikate/9999/dokument",
+                          "body":  {
+
+                                   },
+                          "headers":  [
+
+                                      ],
+                          "parameters":  [
+
+                                         ],
+                          "authentication":  {
+
+                                             },
+                          "metaSortKey":  58
+                      }
+                  ]
+}

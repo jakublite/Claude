@@ -1,0 +1,159 @@
+/* Eigene Ergänzungen zum Aura-Theme. Farben und Abstände kommen aus den Aura-/Vaadin-Variablen. */
+
+html {
+  --aura-accent-color-light: oklch(0.55 0.2 275);
+  --aura-accent-color-dark: oklch(0.72 0.15 275);
+}
+
+/* Navigation */
+.marke {
+  display: flex;
+  align-items: center;
+  gap: var(--vaadin-gap-s);
+  padding: var(--vaadin-padding-l) var(--vaadin-padding-m);
+  font-size: var(--aura-font-size-l);
+  font-weight: var(--aura-font-weight-semibold);
+}
+
+.marke vaadin-icon {
+  color: var(--aura-accent-color);
+}
+
+.view-titel {
+  font-size: var(--aura-font-size-l);
+  margin: 0;
+}
+
+/* Seitenrahmen */
+.seite {
+  padding: var(--vaadin-padding-l);
+  gap: var(--vaadin-gap-l);
+}
+
+.toolbar {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .seite {
+    padding: var(--vaadin-padding-s);
+  }
+
+  .toolbar vaadin-text-field,
+  .toolbar vaadin-combo-box {
+    width: 100% !important;
+  }
+}
+
+/* Übersicht */
+.kennzahlen {
+  display: grid;
+  /* min(…, 100%): auf schmalen Bildschirmen nie breiter als der Platz */
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: var(--vaadin-gap-m);
+  width: 100%;
+}
+
+.kennzahl vaadin-icon {
+  color: var(--aura-accent-color);
+}
+
+.kennzahl-wert {
+  font-size: 2rem;
+  font-weight: var(--aura-font-weight-semibold);
+  line-height: 1.1;
+}
+
+.zwei-spalten {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: var(--vaadin-gap-m);
+  width: 100%;
+}
+
+/* Listen in Karten */
+.liste-zeile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vaadin-gap-xs);
+  padding-block: var(--vaadin-padding-s);
+  border-bottom: 1px solid var(--vaadin-border-color-secondary);
+}
+
+.liste-zeile:last-child {
+  border-bottom: none;
+}
+
+.zeile-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--vaadin-gap-s);
+  flex-wrap: wrap;
+}
+
+.zeile-titel {
+  font-weight: var(--aura-font-weight-semibold);
+}
+
+.gedimmt {
+  color: var(--vaadin-text-color-secondary);
+  font-size: var(--aura-font-size-s);
+}
+
+.wachsen {
+  flex: 1;
+}
+
+.ueberfaellig {
+  color: var(--aura-red-text);
+  font-weight: var(--aura-font-weight-semibold);
+}
+
+/* Grid-Zellen */
+.auslastung {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+
+.visitenkarte {
+  display: flex;
+  align-items: center;
+  gap: var(--vaadin-gap-m);
+}
+
+.visitenkarte-text {
+  display: flex;
+  flex-direction: column;
+}
+
+vaadin-avatar.klein {
+  --vaadin-avatar-size: 1.75rem;
+}
+
+/* Postausgang */
+.nachricht-text {
+  white-space: pre-wrap;
+  font-family: inherit;
+  margin: 0;
+}
+
+/* 360°-Sicht */
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vaadin-gap-m);
+}
+
+.kacheln {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: var(--vaadin-gap-m);
+}
+
+.label-wert {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--vaadin-gap-m);
+}

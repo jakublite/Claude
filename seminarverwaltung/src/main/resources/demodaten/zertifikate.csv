@@ -1,0 +1,16 @@
+seminarTitel;teilnehmerEmail;niveau;ausstellungsdatum;gueltigBis
+Git Grundlagen;hannah.vogel@example.com;A;2023-03-14;2025-03-14
+Git Grundlagen;jan.richter@example.com;B;2023-03-14;2025-03-14
+Git Grundlagen;aylin.demir@example.com;B;2023-03-14;
+Docker für Entwickler;lena.hofmann@example.com;B;2026-02-10;2029-02-10
+Docker für Entwickler;paul.weber@example.com;A;2026-02-10;2029-02-10
+Docker für Entwickler;emma.schulz@example.com;C;2026-02-10;
+Docker für Entwickler;lukas.braun@example.com;B;2026-02-10;2029-02-10
+Oracle Performance Tuning;murat.yilmaz@example.com;A;2026-06-17;2028-06-17
+Oracle Performance Tuning;nina.koch@example.com;B;2026-06-17;2028-06-17
+Oracle Performance Tuning;tim.hartmann@example.com;C;2026-06-17;
+REST-APIs entwerfen;sophie.wagner@example.com;A;2026-09-22;
+REST-APIs entwerfen;felix.schmid@example.com;B;2026-09-22;2029-09-22
+REST-APIs entwerfen;marie.zimmermann@example.com;B;2026-09-22;2029-09-22
+REST-APIs entwerfen;ben.krueger@example.com;C;2026-09-22;
+REST-APIs entwerfen;zoe.lang@example.com;A;2026-09-22;2029-09-22

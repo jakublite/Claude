@@ -1,0 +1,16 @@
+titel;art;bezugsart;verfuegbarBis;gebuehr;bezahlt;seminarTitel;benutzerEmail
+Java ist auch eine Insel;BUCH;LEIHEN;2026-10-15;5.00;false;Java Grundlagen;lena.hofmann@example.com
+Effective Java;BUCH;LEIHEN;2026-09-30;6.50;true;Java Grundlagen;murat.yilmaz@example.com
+Oracle SQL Tuning Guide;EBOOK;LEIHEN;2026-08-01;3.00;true;Oracle Performance Tuning;nina.koch@example.com
+Java Kursskript;PDF;KAUFEN;;19.90;true;Java Grundlagen;murat.yilmaz@example.com
+SQL Spickzettel;PDF;KAUFEN;;4.90;false;SQL für Einsteiger;lena.hofmann@example.com
+Clean Code;BUCH;LEIHEN;2027-02-01;5.00;true;Clean Code Workshop;
+Spring in Action;EBOOK;LEIHEN;2026-12-20;4.00;false;Spring Boot kompakt;sophie.wagner@example.com
+Spring Boot Videokurs;VIDEO;KAUFEN;;49.00;false;Spring Boot kompakt;felix.schmid@example.com
+Git Cheat Sheet;PDF;KAUFEN;;0.00;true;Git Grundlagen;hannah.vogel@example.com
+Docker Deep Dive;EBOOK;KAUFEN;;24.90;true;Docker für Entwickler;paul.weber@example.com
+REST API Design Rulebook;BUCH;LEIHEN;2026-12-15;5.00;true;REST-APIs entwerfen;marie.zimmermann@example.com
+Vaadin Flow Aufzeichnung;VIDEO;LEIHEN;2027-01-15;9.90;false;Vaadin Flow Praxis;emma.schulz@example.com
+Scrum Guide;PDF;KAUFEN;;0.00;true;Scrum im Team;
+Refactoring;BUCH;LEIHEN;2027-03-31;5.00;false;;tim.hartmann@example.com
+Design Patterns;BUCH;KAUFEN;;39.90;false;;

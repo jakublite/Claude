@@ -1,0 +1,5 @@
+typ;titel;beschreibung;startDatum;endDatum;maxTeilnehmer;preis;kursleiterEmail;teilnehmerEmails;meetingLink;plattform;ort;raum;wartelisteEmails
+ONLINE;Java Grundlagen;Einstieg in Java 21: Syntax, OOP, Collections;2026-11-16;2026-11-18;12;450.00;anna.berger@example.com;lena.hofmann@example.com,murat.yilmaz@example.com;https://meet.example.com/java-grundlagen;Teams;;;
+ONLINE;Spring Boot kompakt;REST-APIs mit Spring Boot 4 und JPA;2026-12-01;2026-12-02;2;390.00;anna.berger@example.com;sophie.wagner@example.com,felix.schmid@example.com;https://meet.example.com/spring-boot;Zoom;;;
+PRAESENZ;SQL für Einsteiger;Abfragen, Joins und Indizes mit Oracle;2026-11-23;2026-11-24;10;520.00;tobias.kraemer@example.com;lena.hofmann@example.com;;;Augsburg;Raum 2.14;
+PRAESENZ;Clean Code Workshop;Lesbarer Code, Refactoring, Tests;2027-01-12;2027-01-13;8;600.00;tobias.kraemer@example.com;;;;München;Schulungsraum Nord;
